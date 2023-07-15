@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Action
+Profiles=profile_id
+Name=Delete folder
+Icon=emblem-remove
+# Example: Icon=text-editor
+ 
+[X-Action-Profile profile_id]
+MimeTypes=inode/directory
+Exec=rm -rf %F
+# Example: Exec=gedit %f

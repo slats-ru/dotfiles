@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Action
+Profiles=profile_id
+Name=Edit as root here
+Icon=nvim
+# Example: Icon=text-editor
+ 
+[X-Action-Profile profile_id]
+MimeTypes=text/plain
+Exec=kitty xsudo nvim %f
+# Example: Exec=gedit %f

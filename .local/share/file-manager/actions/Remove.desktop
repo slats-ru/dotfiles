@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Action
+Profiles=profile_id
+Name=Delete file
+Icon=emblem-remove
+# Example: Icon=text-editor
+ 
+[X-Action-Profile profile_id]
+MimeTypes=text/*;audio/*;image/*;application/*;video/*
+Exec=rm -f %F
+# Example: Exec=gedit %f

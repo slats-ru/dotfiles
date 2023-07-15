@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Action
+Profiles=profile_id
+Name=Open root terminal here
+Icon=kitty
+# Example: Icon=text-editor
+ 
+[X-Action-Profile profile_id]
+MimeTypes=inode/directory
+Exec=xsudo kitty %f
+# Example: Exec=gedit %f
