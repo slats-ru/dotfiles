@@ -42,10 +42,12 @@ terminal = 'kitty'
 
 def rofi_power_menu(qtile):
     qtile.cmd_spawn('''
-                    rofi -show p
-                    -modi p:'rofi-power-menu --symbols-font "Symbols Nerd Font Mono"'
-                    -font "JetBrains Mono NF 12"
-                    -theme-str 'window {width: 12em;} listview {lines: 6;}'
+                    rofi -show menu 
+                    -modi menu:'rofi-power-menu 
+                    --choices=shutdown/reboot/suspend/logout 
+                    --symbols-font "Symbols Nerd Font Mono"' 
+                    -font "JetBrains Mono NF 12" 
+                    -theme-str 'window {width: 12em;} listview {lines: 4;}'
                     ''')
 
 keys = [
@@ -106,14 +108,13 @@ keys = [
     Key([], "XF86AudioMute", lazy.spawn("amixer -c 0 -q set Master toggle")),
 ]
 
-groups = [Group("1", label = "", layout="monadtall"),
+groups = [Group("1", label = "", layout="monadtall"),
           Group("2", label = "", layout="max", matches=[Match(wm_class=["google-chrome", "Google-chrome"])]),
-          Group("3", label = "", layout="monadtall", matches=[Match(wm_class=["pcmanfm"])]),
-          Group("4", label = "", layout="monadtall"),
-          Group("5", label = "", layout="max", matches=[Match(wm_class=["obsidian"])]),
-          Group("6", label = "", layout="max", matches=[Match(wm_class=["code", "Code"])]),
-          Group("7", label = "", layout="monadtall"),
-          Group("8", label = "", layout="monadtall"),
+          Group("3", label = "", layout="max", matches=[Match(wm_class=["code", "Code", "jetbrains-pycharm-ce"])]),
+          Group("4", label = "", layout="monadtall", matches=[Match(wm_class=["pcmanfm"])]),
+          Group("5", label = "󰈚", layout="monadtall"),
+          Group("6", label = "󰜫", layout="max", matches=[Match(wm_class=["obsidian"])]),
+          Group("7", label = "󰒓", layout="monadtall"),
           ]
 
 for i in groups:
@@ -157,32 +158,32 @@ colors_nord = [["#2E3440"],   # 0 polar_night_1
           ["#A3BE8C"],   # 14 aurora_green
           ["#B48EAD"]]   # 15 aurora_magenta
         
-colors = [["#f2d5cf"],   # 0 Rosewater 
-          ["#eebebe"],   # 1 Flamingo
-          ["#f4b8e4"],   # 2 Pink
-          ["#ca9ee6"],   # 3 Mauve
-          ["#e78284"],   # 4 Red
-          ["#ea999c"],   # 5 Maroon
-          ["#ef9f76"],   # 6 Peach
-          ["#e5c890"],   # 7 Yellow
-          ["#a6d189"],   # 8 Green
-          ["#81c8be"],   # 9 Teal
-          ["#99d1db"],   # 10 Sky
-          ["#85c1dc"],   # 11 Sapphire
-          ["#8caaee"],   # 12 Blue
-          ["#babbf1"],   # 13 Lavender
-          ["#c6d0f5"],   # 14 Text
-          ["#b5bfe2"],   # 15 Subtext1
-          ["#a5adce"],   # 16 Subtext0
-          ["#949cbb"],   # 17 Overlay2
-          ["#838ba7"],   # 18 Overlay1
-          ["#737994"],   # 19 Overlay0
-          ["#626880"],   # 20 Surface2
-          ["#51576d"],   # 21 Surface1
-          ["#414559"],   # 22 Surface0
-          ["#303446"],   # 23 Base
-          ["#292c3c"],   # 24 Mantle
-          ["#232634"]]   # 25 Crust
+colors = [["#f2d5cf"],   # 0 rosewater 
+          ["#eebebe"],   # 1 flamingo
+          ["#f4b8e4"],   # 2 pink
+          ["#ca9ee6"],   # 3 mauve
+          ["#e78284"],   # 4 red
+          ["#ea999c"],   # 5 maroon
+          ["#ef9f76"],   # 6 peach
+          ["#e5c890"],   # 7 yellow
+          ["#a6d189"],   # 8 green
+          ["#81c8be"],   # 9 teal
+          ["#99d1db"],   # 10 sky
+          ["#85c1dc"],   # 11 sapphire
+          ["#8caaee"],   # 12 blue
+          ["#babbf1"],   # 13 lavender
+          ["#c6d0f5"],   # 14 text
+          ["#b5bfe2"],   # 15 subtext1
+          ["#a5adce"],   # 16 subtext0
+          ["#949cbb"],   # 17 overlay2
+          ["#838ba7"],   # 18 overlay1
+          ["#737994"],   # 19 overlay0
+          ["#626880"],   # 20 surface2
+          ["#51576d"],   # 21 surface1
+          ["#414559"],   # 22 surface0
+          ["#303446"],   # 23 base
+          ["#292c3c"],   # 24 mantle
+          ["#232634"]]   # 25 crust
 
 layout_theme = {"border_width": 2,
                 "margin": 5,
@@ -202,9 +203,6 @@ layouts = [
                    border_normal_stack = colors[14],
                    border_on_single = True),
     layout.Floating(**layout_theme),
-    #layout.Floating(border_width = 2,
-                   #border_focus = colors[17],
-                   #border_normal = colors[21]),
     # layout.TreeTab(border_width = 2, bg_color = colors[1], active_bg = colors[9], inactive_bg = colors[3], panel_width = 200),
     # layout.MonadThreeCol(**layout_theme),
     # layout.Bsp(**layout_theme),
@@ -256,7 +254,6 @@ screens = [
                     highlight_color=colors[1],
                     font = "JetBrainsMono NFM",
                     fontsize = 22,
-                    # padding=1,
                     padding_x=2,
                     padding_y=1,
                     rounded=False,
@@ -275,38 +272,30 @@ screens = [
                     **powerline,
                     ),
                 widget.WidgetBox(
-                    text_open = "  ",
+                    text_open = " ",
                     text_closed = " ",
                     widgets = [
                         widget.Memory(
                             format='{MemUsed: .1f}{mm}', 
                             background=colors[22],
-                            foreground=colors[1],
+                            foreground=colors[14],
                             mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e htop')},
                             measure_mem = 'G',
                             ),
                         widget.CPU(
                             format='  {load_percent}%', 
                             background=colors[22],
-                            foreground=colors[1],
+                            foreground=colors[14],
                             mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e htop')},
                             ),
                         widget.ThermalSensor(
                             format="  {temp:.1f}{unit}",
                             background=colors[22],
-                            foreground=colors[1],
+                            foreground=colors[14],
                             threshold=60,
                             ),
                         ],
                     background=colors[22],
-                    ),
-                widget.Pomodoro(
-                    color_active = colors[8],
-                    color_break = colors[7],
-                    color_inactive = colors[4],
-                    notification_on = True,
-                    prefix_inactive = ' 󰔟󱦟 ',
-                    font = 'Hack Nerd Font Bold',
                     ),
                 widget.Spacer(
                     background=colors[22],
@@ -363,12 +352,12 @@ screens = [
                 widget.CheckUpdates(
                     update_interval = 600,
                     distro = 'Arch_checkupdates',
-                    display_format = ' {updates}',
-                    no_update_string = ' 0',
+                    display_format = '󰮯 {updates}',
+                    no_update_string = '󰮯 0',
                     background=colors[12],
                     colour_have_updates = colors[22],
                     colour_no_updates = colors[22],
-                    execute = terminal + ' -e sudo pacman -Syu',
+                    execute = terminal + ' -e paru -Syu',
                     font = 'Hack Nerd Font Bold',
                     **powerline,
                     ),
@@ -432,11 +421,12 @@ screens = [
                     mode='both',
                     theme_path='/home/slats/.config/qtile/icons',
                     background = colors[3],
+                    foreground = colors[25],
                     bar_width=50,
-                    bar_colour_high=colors[13],
-                    bar_colour_loud=colors[11],
-                    bar_colour_normal=colors[14],
-                    bar_colour_mute=colors[3],
+                    bar_colour_high=colors[7],
+                    bar_colour_loud=colors[4],
+                    bar_colour_normal=colors[8],
+                    bar_colour_mute=colors[13],
                     limit_normal=50,
                     limit_high=90,
                     text_format='{volume}%',
