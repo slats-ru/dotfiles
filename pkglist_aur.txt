@@ -1,0 +1,15 @@
+brave-bin
+catppuccin-cursors-frappe
+catppuccin-gtk-theme-frappe
+google-chrome
+networkmanager-dmenu-git
+noto-color-emoji-fontconfig
+onlyoffice-bin
+papirus-folders-catppuccin-git
+paru
+picom-simpleanims-next-git
+qtile-extras
+rofi-bluetooth-git
+ttf-weather-icons
+visual-studio-code-bin
+xfce-polkit
