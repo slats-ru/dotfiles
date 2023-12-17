@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+<action>
+	<icon>utilities-terminal</icon>
+	<name>Открыть терминал</name>
+	<submenu></submenu>
+	<unique-id>1677263393679635-1</unique-id>
+	<command>exo-open --working-directory %f --launch TerminalEmulator</command>
+	<description>Пример особого действия</description>
+	<range></range>
+	<patterns>*</patterns>
+	<startup-notify/>
+	<directories/>
+</action>
+<action>
+	<icon></icon>
+	<name>Open Thunar as root here</name>
+	<submenu></submenu>
+	<unique-id>1677263985367179-2</unique-id>
+	<command>pkexec thunar %f</command>
+	<description></description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<directories/>
+</action>
+<action>
+	<icon></icon>
+	<name>Edit as root</name>
+	<submenu></submenu>
+	<unique-id>1677333010923368-1</unique-id>
+	<command>pkexec  env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY exo-open --launch=TerminalEmulator nvim %f</command>
+	<description></description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<text-files/>
+</action>
+<action>
+	<icon></icon>
+	<name>Edit with NeoVim</name>
+	<submenu></submenu>
+	<unique-id>1702232075714817-1</unique-id>
+	<command>exo-open --launch=TerminalEmulator nvim %f</command>
+	<description></description>
+	<range>*</range>
+	<patterns>*</patterns>
+	<other-files/>
+	<text-files/>
+</action>
+</actions>
