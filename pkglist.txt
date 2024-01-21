@@ -48,7 +48,6 @@ p7zip
 pacman-contrib
 papirus-icon-theme
 pavucontrol
-pcmanfm-gtk3
 pinta
 pipewire
 pipewire-alsa
@@ -72,6 +71,7 @@ ripgrep
 ristretto
 rofi
 smartmontools
+thunar
 tk
 tldr
 tlp
@@ -93,6 +93,7 @@ xarchiver
 xclip
 xdg-utils
 xdotool
+xfce4-settings
 xorg-server
 xorg-xinit
 xreader

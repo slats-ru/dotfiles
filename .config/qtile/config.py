@@ -28,17 +28,22 @@ import os
 import subprocess
 
 from libqtile import qtile
-from libqtile import bar, layout, widget, hook
+from libqtile import bar, layout, hook
+from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
+#  from libqtile.utils import send_notification
 
 from qtile_extras import widget
+from qtile_extras.widget import modify
 from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
 
 import owm
 
+
 mod = "mod4"
 terminal = 'kitty'
+
 
 def rofi_power_menu(qtile):
     qtile.cmd_spawn('''
@@ -49,6 +54,23 @@ def rofi_power_menu(qtile):
                     -font "JetBrains Mono NF 12" 
                     -theme-str 'window {width: 12em;} listview {lines: 4;}'
                     ''')
+
+
+class MyKeyboardLayout(old_widget.base.ThreadPoolText):
+    def __init__(self, **config):
+        super().__init__(**config)
+        self.add_callbacks({"Button1": self.next_keyboard})
+
+    def poll(self):
+        return subprocess.check_output('xkb-switch').decode().strip()[:2].upper()
+
+    def next_keyboard(self):
+        subprocess.run(['xkb-switch', '-n'])
+        self.tick()
+
+
+MyKeyboardLayout = modify(MyKeyboardLayout, initialise=False)
+
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -88,13 +110,13 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "p", lazy.function(rofi_power_menu), desc="Poweroff"),
-    Key([mod], "space", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
+    # Key([mod], "space", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
     # Applications launcher
     Key([mod], "s", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "g", lazy.spawn("google-chrome-stable"), desc='Google Chrome'),
-    Key([mod], "t", lazy.spawn("pcmanfm"), desc='PCManFM'),
+    Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc='Thunar'),
     Key([mod], "o", lazy.spawn("obsidian"), desc='Obsidian'),
     Key([mod], "v", lazy.spawn("code"), desc='VS Code'),
     # Brightness
@@ -110,8 +132,8 @@ keys = [
 
 groups = [Group("1", label = "", layout="monadtall"),
           Group("2", label = "", layout="max", matches=[Match(wm_class=["google-chrome", "Google-chrome"])]),
-          Group("3", label = "", layout="max", matches=[Match(wm_class=["code", "Code", "jetbrains-pycharm-ce"])]),
-          Group("4", label = "", layout="monadtall", matches=[Match(wm_class=["pcmanfm"])]),
+          Group("3", label = "", layout="max", matches=[Match(wm_class=["code", "Code"])]),
+          Group("4", label = "", layout="monadtall", matches=[Match(wm_class=["thunar"])]),
           Group("5", label = "󰈚", layout="monadtall"),
           Group("6", label = "󰜫", layout="max", matches=[Match(wm_class=["obsidian"])]),
           Group("7", label = "󰒓", layout="monadtall"),
@@ -242,8 +264,12 @@ screens = [
                 widget.CurrentLayoutIcon(
                     scale=0.6,
                     background=colors[25],
-                    **powerline,
+                    #**powerline,
                     ),
+                widget.Spacer(
+                    background=colors[25],
+                    length=1,
+                    **powerline,),
                  widget.GroupBox(
                     background=colors[23],
                     this_current_screen_border = colors[12],
@@ -386,14 +412,22 @@ screens = [
                     low_foreground = colors[4],
                     **powerline,
                     ),
-                widget.KeyboardLayout(
-                    configured_keyboards=['us', 'ru'],
-                    background=colors[3],
-                    foreground=colors[22],
-                    display_map={'us' : 'US', 'ru' : 'RU'},
-                    font = 'Hack Nerd Font Bold',
-                    **powerline,
-                    ),
+                # widget.KeyboardLayout(
+                #    configured_keyboards=['us', 'ru,us'],
+                #    background=colors[3],
+                #    foreground=colors[22],
+                #    display_map={'us' : 'US', 'ru' : 'RU'},
+                #    font = 'Hack Nerd Font Bold',
+                #    **powerline,
+                #    ),
+                MyKeyboardLayout(
+                        text='UNK',
+                        update_interval=0.1,
+                        background=colors[3],
+                        foreground=colors[22],
+                        font = 'Hack Nerd Font Bold',
+                        **powerline,
+                        ),
                 widget.Wlan(
                     foreground = colors[22],
                     background = colors[12],
@@ -508,6 +542,7 @@ def start_once():
     home = os.path.expanduser('~')
     subprocess.call([home + '/.config/qtile/scripts/autostart.sh'])
 
+
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
 # string besides java UI toolkits; you can see several discussions on the
 # mailing lists, GitHub issues, and other WM documentation that suggest setting
@@ -516,4 +551,4 @@ def start_once():
 #
 # We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
 # java that happens to be on java's whitelist.
-wmname = "LG3D"
+wmname = "QTile"

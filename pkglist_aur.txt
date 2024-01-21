@@ -13,3 +13,4 @@ rofi-bluetooth-git
 ttf-weather-icons
 visual-studio-code-bin
 xfce-polkit
+xkb-switch
