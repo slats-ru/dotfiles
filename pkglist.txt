@@ -63,6 +63,7 @@ python-openpyxl
 python-pandas
 python-psutil
 python-pylint
+python-pytest
 python-requests
 qalculate-gtk
 qtile
