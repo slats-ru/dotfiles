@@ -4,4 +4,7 @@ udiskie --notify --smart-tray &
 # nm-applet &
 # blueman-applet &
 /usr/lib/xfce-polkit/xfce-polkit &
-/usr/bin/dunst &
+dunst &
+picom &
+gammastep &
+mpv --no-video /home/slats/.config/qtile/resources/boot.wav &
