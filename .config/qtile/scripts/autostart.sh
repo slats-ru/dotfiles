@@ -8,3 +8,4 @@ dunst &
 picom &
 gammastep &
 mpv --no-video /home/slats/.config/qtile/resources/boot.wav &
+hiddify &
