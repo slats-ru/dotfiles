@@ -116,6 +116,7 @@ keys = [
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "g", lazy.spawn("google-chrome-stable --proxy-server='socks5://localhost:2334'"), desc='Google Chrome'),
+    Key([mod], "b", lazy.spawn("brave --proxy-server='socks5://localhost:2334'"), desc='Brave'),
     Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc='Thunar'),
     Key([mod], "o", lazy.spawn("obsidian"), desc='Obsidian'),
     Key([mod], "v", lazy.spawn("code"), desc='VS Code'),
@@ -131,7 +132,7 @@ keys = [
 ]
 
 groups = [Group("1", label = "", layout="monadtall"),
-          Group("2", label = "", layout="max", matches=[Match(wm_class=["google-chrome", "Google-chrome"])]),
+          Group("2", label = "", layout="max", matches=[Match(wm_class=["google-chrome", "Google-chrome", "Brave-browser", "brave-browser"])]),
           Group("3", label = "", layout="max", matches=[Match(wm_class=["code", "Code"])]),
           Group("4", label = "", layout="monadtall", matches=[Match(wm_class=["thunar"])]),
           Group("5", label = "󰈚", layout="monadtall", matches=[Match(wm_class=["xreader"])]),
