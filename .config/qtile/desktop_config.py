@@ -119,6 +119,7 @@ keys = [
     Key([mod], "t", lazy.spawn("thunar /mnt/data/Downloads"), desc='Thunar'),
     Key([mod], "o", lazy.spawn("obsidian"), desc='Obsidian'),
     Key([mod], "v", lazy.spawn("code"), desc='VS Code'),
+    Key([mod], "b", lazy.spawn("brave --proxy-server='socks5://localhost:2334'"), desc='Brave'),
     # Brightness
     Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%"), desc="Increses brightness"),
     Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5%-"), desc="Decreases brightness"),
@@ -131,7 +132,7 @@ keys = [
 ]
 
 groups = [Group("1", label = "", layout="monadtall"),
-          Group("2", label = "", layout="max", matches=[Match(wm_class=["google-chrome", "Google-chrome"])]),
+          Group("2", label = "", layout="max", matches=[Match(wm_class=["google-chrome", "Google-chrome", "brave-browser", "Brave-browser"])]),
           Group("3", label = "", layout="max", matches=[Match(wm_class=["code", "Code"])]),
           Group("4", label = "", layout="monadtall", matches=[Match(wm_class=["thunar"])]),
           Group("5", label = "󰈚", layout="monadtall", matches=[Match(wm_class=["xreader", "com.github.johnfactotum.Foliate"])]),
@@ -293,7 +294,6 @@ screens = [
                 widget.TextBox(
                     text="",
                     font = 'Hack Nerd Font Bold',
-                    fontsize=16,
                     foreground=colors[14],
                     mouse_callbacks={'Button1': lazy.spawn("/home/slats/.config/qtile/scripts/maim-desktop.sh", shell=True),
                                      'Button3': lazy.spawn("/home/slats/.config/qtile/scripts/maim-select.sh", shell=True),
@@ -304,7 +304,6 @@ screens = [
                     text_open = " ",
                     text_closed = " ",
                     foreground=colors[14],
-                    fontsize=16,
                     widgets = [
                         widget.Memory(
                             format='{MemUsed: .1f}{mm}', 
