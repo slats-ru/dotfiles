@@ -1,3 +1,4 @@
+alacritty
 alsa-utils
 base
 base-devel
@@ -24,7 +25,9 @@ intel-media-driver
 intel-ucode
 inxi
 iwd
+jupyter-notebook
 kitty
+lib32-mesa
 libpulse
 libva-intel-driver
 lightdm
@@ -32,6 +35,7 @@ lightdm-gtk-greeter
 lightdm-gtk-greeter-settings
 linux
 linux-firmware
+lxappearance
 maim
 man-db
 mlocate
@@ -39,7 +43,6 @@ mpv
 nano
 neofetch
 neovim
-network-manager-applet
 networkmanager
 noto-fonts-emoji
 npm
@@ -64,7 +67,10 @@ python-pandas
 python-psutil
 python-pylint
 python-pytest
+python-pytorch
 python-requests
+python-scikit-learn
+python-seaborn
 qalculate-gtk
 qtile
 ranger
@@ -94,6 +100,7 @@ xarchiver
 xclip
 xdg-utils
 xdotool
+xf86-video-intel
 xfce4-settings
 xorg-server
 xorg-xinit

@@ -2,11 +2,13 @@ brave-bin
 catppuccin-cursors-frappe
 catppuccin-gtk-theme-frappe
 google-chrome
+hiddify-next-bin
 networkmanager-dmenu-git
 noto-color-emoji-fontconfig
 onlyoffice-bin
 papirus-folders-catppuccin-git
 paru
+paru-debug
 picom-simpleanims-next-git
 qtile-extras
 rofi-bluetooth-git
