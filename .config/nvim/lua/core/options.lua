@@ -60,6 +60,11 @@ vim.opt.colorcolumn = '79'
 vim.opt.splitright = true -- vertical split вправо
 vim.opt.splitbelow = true -- horizontal split вниз
 
+-- Set <space> as the leader key
+--  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
 --russian keyboard
 vim.cmd("set keymap=russian-jcukenwin")
 vim.cmd("set iminsert=0")
