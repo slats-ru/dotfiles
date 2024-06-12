@@ -5,7 +5,8 @@ return {
     opts = {
       ensure_installed = {
         'markdown', 
-        'python' 
+        'python',
+        'lua'
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
