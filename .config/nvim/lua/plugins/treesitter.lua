@@ -9,7 +9,7 @@ return {
         'lua'
       },
       -- Autoinstall languages that are not installed
-      auto_install = true,
+      auto_install = false,
       highlight = { enable = true },
       indent = { enable = true },
       incremental_selection = {

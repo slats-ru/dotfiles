@@ -1,4 +1,5 @@
 return { 
+  {
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {
@@ -14,11 +15,20 @@ return {
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
-          map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
+          map('<leader>cr', vim.lsp.buf.rename, '([C]ode) [R]ename object')
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
           map('K', vim.lsp.buf.hover, 'Hover Documentation')
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-                    
+          map('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
+          map('gi', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+          map('<C-k>', vim.lsp.buf.signature_help, 'signature_help')
+          map('<space>wa', vim.lsp.buf.add_workspace_folder, '[A]dd [W]orkspace Folder')
+          map('<space>wr', vim.lsp.buf.remove_workspace_folder, '[R]emove [W]orkspace Folder')
+          map('<space>D', vim.lsp.buf.declaration, 'Type [D]efinition')
+          map('gr', vim.lsp.buf.references, '[G]oto [R]eferences')
+          vim.keymap.set('n', '<space>wl', function()
+            print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+          end, { desc = "[L]ist [W]orkspace Folders" }, bufopts)        
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
@@ -37,9 +47,13 @@ return {
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
       
       local servers = {
-        pyright = {},
-        ruff_lsp = {},
-        pylsp = {},
+        basedpyright = {
+         typeCheckingMode = "standard",
+         capabilities = capabilities,
+        },
+        --ruff_lsp = {},
+        ruff = {capabilities = capabilities,},
+        --pylyzer,
         lua_ls = {
           settings = {
             Lua = {
@@ -54,10 +68,12 @@ return {
  
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', 
-        'pyright',
-        'pylsp',
-        'ruff-lsp'
+        'basedpyright',
+        'lua_ls',
+        --'ruff-lsp',
+        --'mypy',
+        --'pylyzer',
+        'ruff'
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
  
@@ -71,4 +87,19 @@ return {
         },
       }
     end,
-  }
+  },
+
+  -- {
+  --   -- provide a way for non-LSP sources to hook into NeoVim's LSP client
+  --   "nvimtools/none-ls.nvim",
+  --   dependencies = { "mason.nvim" },
+  --   opts = function(_, opts)
+  --     local nls = require("null-ls")
+  --     opts.root_dir = opts.root_dir
+  --       or require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git")
+  --     opts.sources = vim.list_extend(opts.sources or {}, {
+  --       nls.builtins.diagnostics.mypy,
+  --     })
+  --   end,
+  -- }
+}

@@ -6,19 +6,22 @@ return {
   keys = {
     {
       -- Customize or remove this keymap to your liking
-      "<leader>f",
+      "<leader>bf",
       function()
         require("conform").format({ async = true, lsp_fallback = true })
       end,
       mode = "",
-      desc = "Format buffer",
+      desc = "[F]ormat [B]uffer",
     },
   },
   -- Everything in opts will be passed to setup()
   opts = {
     -- Define your formatters
     formatters_by_ft = {
-      python = { "black", "ruff_format", "ruff_organize_imports" },
+      python = { 
+        "ruff_format", 
+        "ruff_organize_imports" 
+        },
     },
     -- Set up format-on-save
     format_on_save = { timeout_ms = 500, lsp_fallback = true },
