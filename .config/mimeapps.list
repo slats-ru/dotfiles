@@ -1,0 +1,19 @@
+[Default Applications]
+text/html=brave-browser.desktop
+x-scheme-handler/http=brave-browser.desktop
+x-scheme-handler/https=brave-browser.desktop
+x-scheme-handler/about=brave-browser.desktop
+x-scheme-handler/unknown=brave-browser.desktop
+application/octet-stream=nvim.desktop
+application/pdf=xreader.desktop
+image/png=org.xfce.ristretto.desktop
+image/jpeg=org.xfce.ristretto.desktop
+
+[Added Associations]
+application/octet-stream=nvim.desktop;
+application/pdf=xreader.desktop
+text/x-python=nvim.desktop;
+font/ttf=nvim.desktop;
+application/msword=onlyoffice-desktopeditors.desktop;
+image/png=org.xfce.ristretto.desktop;
+image/jpeg=org.xfce.ristretto.desktop;
