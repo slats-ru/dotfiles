@@ -11,7 +11,7 @@ return {
       {
         "<leader>fe",
         function()
-          require("neo-tree.command").execute({ toggle = true, dir = "C:/Users/gorsheninaas/Documents/Python-Projects" })
+          require("neo-tree.command").execute({ toggle = true, dir = "/mnt/data/Python-Projects" })          
         end,
         desc = "[F]ile [E]xplorer NeoTree (Python-Projects)",
       },
@@ -112,6 +112,7 @@ return {
         ["<leader>s"] = { name = "+search" },
         ["<leader>t"] = { name = "+tests" },
         ["<leader>u"] = { name = "+ui" },
+        ["<leader>v"] = { name = "+venv" },
         ["<leader>w"] = { name = "+workspaces" },
         ["<leader>x"] = { name = "+diagnostics/quickfix" },
       },
