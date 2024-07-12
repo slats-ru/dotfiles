@@ -8,13 +8,13 @@ return {
       "MunifTanjim/nui.nvim",
     },
     keys = {
-      {
-        "<leader>fe",
-        function()
-          require("neo-tree.command").execute({ toggle = true, dir = "/mnt/data/Python-Projects" })          
-        end,
-        desc = "[F]ile [E]xplorer NeoTree (Python-Projects)",
-      },
+      -- {
+      --   "<leader>fe",
+      --   function()
+      --     require("neo-tree.command").execute({ toggle = true, dir = "/mnt/data/Python-Projects" })          
+      --   end,
+      --   desc = "[F]ile [E]xplorer NeoTree (Python-Projects)",
+      -- },
       {
         "<leader>ge",
         function()
@@ -55,6 +55,25 @@ return {
       })
       vim.cmd([[nnoremap \ :Neotree reveal<cr>]])
     end,
+  },
+
+  {
+    "mikavilpas/yazi.nvim",
+    event = "VeryLazy",
+    keys = {
+      {
+        "<leader>-",
+        function()
+          require("yazi").yazi()
+        end,
+        desc = "Open the file manager",
+      },
+    },
+    ---@type YaziConfig
+    opts = {
+      -- if you want to open yazi instead of netrw, see below for more info
+      open_for_directories = false,
+    },
   },
 
   {
