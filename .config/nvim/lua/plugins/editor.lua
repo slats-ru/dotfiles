@@ -290,15 +290,4 @@ return {
       }, 
     },
   },
-
-  {
-    -- persist and toggle multiple terminals
-    {
-      'akinsho/toggleterm.nvim', 
-      version = "*", 
-      opts = {
-        open_mapping = [[<leader>T]]
-      }
-    }
-  },
 }
