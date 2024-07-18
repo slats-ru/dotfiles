@@ -1,7 +1,6 @@
 """OpenWeatherMap widget for QTile"""
 
 import requests
-
 from libqtile import pangocffi
 from libqtile.log_utils import logger
 from libqtile.widget import base
@@ -12,49 +11,49 @@ __version__ = "0.2"
 ICON_FONT = "Weather Icons"
 
 ICONS = {
-    "Weather Icons": {    # https://github.com/erikflowers/weather-icons
-        "01d": "\uF00D",  # Clear sky
-        "01n": "\uF02E",
-        "02d": "\uF002",  # Few clouds
-        "02n": "\uF086",
-        "03d": "\uF041",  # Scattered Clouds
-        "03n": "\uF041",
-        "04d": "\uF013",  # Broken clouds
-        "04n": "\uF013",
-        "09d": "\uF009",  # Shower Rain
-        "09n": "\uF037",
-        "10d": "\uF008",  # Rain
-        "10n": "\uF036",
-        "11d": "\uF010",  # Thunderstorm
-        "11n": "\uF03B",
-        "13d": "\uF00A",  # Snow
-        "13n": "\uF038",
-        "50d": "\uF003",  # Mist
-        "50n": "\uF04A",
-        "sleetd": "\uF0B2",
-        "sleetn": "\uF0B3",
+    "Weather Icons": {  # https://github.com/erikflowers/weather-icons
+        "01d": "\uf00d",  # Clear sky
+        "01n": "\uf02e",
+        "02d": "\uf002",  # Few clouds
+        "02n": "\uf086",
+        "03d": "\uf041",  # Scattered Clouds
+        "03n": "\uf041",
+        "04d": "\uf013",  # Broken clouds
+        "04n": "\uf013",
+        "09d": "\uf009",  # Shower Rain
+        "09n": "\uf037",
+        "10d": "\uf008",  # Rain
+        "10n": "\uf036",
+        "11d": "\uf010",  # Thunderstorm
+        "11n": "\uf03b",
+        "13d": "\uf00a",  # Snow
+        "13n": "\uf038",
+        "50d": "\uf003",  # Mist
+        "50n": "\uf04a",
+        "sleetd": "\uf0b2",
+        "sleetn": "\uf0b3",
     },
     "Material Design Icons": {
-        "01d": "\U000F0599",  # Clear sky
-        "01n": "\U000F0594",
-        "02d": "\U000F0595",  # Few clouds
-        "02n": "\U000F0F31",
-        "03d": "\U000F0595",  # Scattered Clouds
-        "03n": "\U000F0F31",
-        "04d": "\U000F0590",  # Broken clouds
-        "04n": "\U000F0F31",
-        "09d": "\U000F0F33",  # Shower Rain
-        "09n": "\U000F0F33",
-        "10d": "\U000F0597",  # Rain
-        "10n": "\U000F0597",
-        "11d": "\U000F0596",  # Thunderstorm
-        "11n": "\U000F0596",
-        "13d": "\U000F0598",  # Snow
-        "13n": "\U000F0598",
-        "50d": "\U000F0591",  # Mist
-        "50n": "\U000F0591",
-        "sleetd": "\U000F0596",
-        "sleetn": "\U000F0596",
+        "01d": "\U000f0599",  # Clear sky
+        "01n": "\U000f0594",
+        "02d": "\U000f0595",  # Few clouds
+        "02n": "\U000f0f31",
+        "03d": "\U000f0595",  # Scattered Clouds
+        "03n": "\U000f0f31",
+        "04d": "\U000f0590",  # Broken clouds
+        "04n": "\U000f0f31",
+        "09d": "\U000f0f33",  # Shower Rain
+        "09n": "\U000f0f33",
+        "10d": "\U000f0597",  # Rain
+        "10n": "\U000f0597",
+        "11d": "\U000f0596",  # Thunderstorm
+        "11n": "\U000f0596",
+        "13d": "\U000f0598",  # Snow
+        "13n": "\U000f0598",
+        "50d": "\U000f0591",  # Mist
+        "50n": "\U000f0591",
+        "sleetd": "\U000f0596",
+        "sleetn": "\U000f0596",
     },
 }
 
@@ -121,8 +120,9 @@ try:
     BaseClass = base.ThreadPoolText
     NewWidgetBase = True
 except AttributeError:
-    BaseClass = base.ThreadedPollText # pylint: disable=no-member
+    BaseClass = base.ThreadedPollText  # pylint: disable=no-member
     NewWidgetBase = False
+
 
 class OpenWeatherMap(BaseClass):
     """OpenWeatherMap widget for QTile"""
@@ -131,7 +131,11 @@ class OpenWeatherMap(BaseClass):
     defaults = [
         ("api_key", "", "API Key for OpenWeatherMap data"),
         ("icon_font", None, "Font to use for weather icons"),
-        ("format", "{temp:.1f}{temp_units} {icon}", "Format string",),
+        (
+            "format",
+            "{temp:.1f}{temp_units} {icon}",
+            "Format string",
+        ),
         ("update_interval", 3600, "Update interval in seconds between look ups"),
         ("latitude", 51.4934, "Latitude to look up weather data for"),
         ("longitude", 0.0098, "Longitude to look up weather data for"),
@@ -150,12 +154,12 @@ class OpenWeatherMap(BaseClass):
                 "OpenWeatherMap: An API key is required. Pass as the `api_key` parameter"
             )
         self.url = f"https://api.openweathermap.org/data/2.5/weather?lat={self.latitude}&lon={self.longitude}&appid={self.api_key}&units={self.units}"
-        if not self.icon_font: # pylint: disable=access-member-before-definition # icon_font created by add_defaults
+        if not self.icon_font:  # pylint: disable=access-member-before-definition # icon_font created by add_defaults
             self.icon_font = ICON_FONT
         self.markup = True
 
     def poll(self):
-        resp = requests.get(self.url)
+        resp = requests.get(self.url, allow_redirects=False, timeout=120)
         self.status = resp.status_code
         if resp.status_code == 200:
             _lookup = lambda group, key: group[key] if key in group else ""
@@ -183,7 +187,9 @@ class OpenWeatherMap(BaseClass):
             temp_units = {"metric": "°C", "imperial": "°F", "standard": "°K"}[
                 self.units
             ]
-            self.format = self.format.replace("{icon}", '<span face="{icon_font}">{icon}</span>')
+            self.format = self.format.replace(
+                "{icon}", '<span face="{icon_font}">{icon}</span>'
+            )
             info = {
                 "icon": ICONS[self.icon_font][icon_id],
                 "icon_font": self.icon_font,
@@ -200,4 +206,3 @@ class OpenWeatherMap(BaseClass):
             return self.format.format(**info)
         else:
             return f"OpenWeatherMap Error {resp.status_code}"
-
