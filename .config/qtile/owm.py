@@ -159,7 +159,7 @@ class OpenWeatherMap(BaseClass):
         self.markup = True
 
     def poll(self):
-        resp = requests.get(self.url, allow_redirects=False, timeout=120)
+        resp = requests.get(self.url, allow_redirects=False, timeout=3600)
         self.status = resp.status_code
         if resp.status_code == 200:
             _lookup = lambda group, key: group[key] if key in group else ""

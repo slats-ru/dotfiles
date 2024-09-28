@@ -27,33 +27,30 @@
 import os
 import subprocess
 
-from libqtile import qtile
-from libqtile import bar, layout, hook
+import owm
+from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-#  from libqtile.utils import send_notification
 
+#  from libqtile.utils import send_notification
 from qtile_extras import widget
 from qtile_extras.widget import modify
 from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
 
-import owm
-
-
 mod = "mod4"
-terminal = 'kitty'
+terminal = "kitty"
 
 
 def rofi_power_menu(qtile):
-    qtile.cmd_spawn('''
+    qtile.cmd_spawn("""
                     rofi -show menu 
                     -modi menu:'rofi-power-menu 
                     --choices=shutdown/reboot/suspend/logout 
                     --symbols-font "Symbols Nerd Font Mono"' 
                     -font "JetBrains Mono NF 12" 
                     -theme-str 'window {width: 12em;} listview {lines: 4;}'
-                    ''')
+                    """)
 
 
 class MyKeyboardLayout(old_widget.base.ThreadPoolText):
@@ -62,10 +59,10 @@ class MyKeyboardLayout(old_widget.base.ThreadPoolText):
         self.add_callbacks({"Button1": self.next_keyboard})
 
     def poll(self):
-        return subprocess.check_output('xkb-switch').decode().strip()[:2].upper()
+        return subprocess.check_output("xkb-switch").decode().strip()[:2].upper()
 
     def next_keyboard(self):
-        subprocess.run(['xkb-switch', '-n'])
+        subprocess.run(["xkb-switch", "-n"])
         self.tick()
 
 
@@ -83,8 +80,15 @@ keys = [
     # Key([mod], "space", lazy.layout.next(), desc="Move window focus to other window"),
     # Move windows between left/right columns or move up/down in current stack.
     # Moving out of range in Columns layout will create new column.
-    Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
-    Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
+    Key(
+        [mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"
+    ),
+    Key(
+        [mod, "shift"],
+        "l",
+        lazy.layout.shuffle_right(),
+        desc="Move window to the right",
+    ),
     Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
@@ -92,16 +96,28 @@ keys = [
     Key([mod, "control"], "i", lazy.layout.grow(), desc="Expand window (monadtall)"),
     Key([mod, "control"], "d", lazy.layout.shrink(), desc="Shrink window (monadtal)"),
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
-    Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
+    Key(
+        [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
+    ),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([mod, "control"], "r", lazy.layout.reset(), desc="Reset all window sizes (monadtall)"),
+    Key(
+        [mod, "control"],
+        "r",
+        lazy.layout.reset(),
+        desc="Reset all window sizes (monadtall)",
+    ),
     Key([mod, "control"], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
     # Unsplit = 1 window displayed, like Max layout, but still with
     # multiple stack panes
-    Key([mod, "shift"], "Return", lazy.layout.toggle_split(), desc="Toggle between split and unsplit sides of stack",),
+    Key(
+        [mod, "shift"],
+        "Return",
+        lazy.layout.toggle_split(),
+        desc="Toggle between split and unsplit sides of stack",
+    ),
     Key([mod, "shift"], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
     Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
     # Essentials
@@ -115,30 +131,73 @@ keys = [
     Key([mod], "s", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    Key([mod], "g", lazy.spawn("google-chrome-stable --proxy-server='socks5://localhost:2334'"), desc='Google Chrome'),
-    Key([mod], "b", lazy.spawn("brave --proxy-server='socks5://localhost:2334'"), desc='Brave'),
-    Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc='Thunar'),
-    Key([mod], "o", lazy.spawn("obsidian"), desc='Obsidian'),
-    Key([mod], "v", lazy.spawn("code"), desc='VS Code'),
+    Key(
+        [mod],
+        "b",
+        lazy.spawn("brave --proxy-server='socks5://localhost:12334'"),
+        desc="Brave",
+    ),
+    Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc="Thunar"),
+    Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
+    Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
+    Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
     # Brightness
-    Key([], "XF86MonBrightnessUp", lazy.spawn("brightnessctl set +5%"), desc="Increses brightness"),
-    Key([], "XF86MonBrightnessDown", lazy.spawn("brightnessctl set 5%-"), desc="Decreases brightness"),
+    Key(
+        [],
+        "XF86MonBrightnessUp",
+        lazy.spawn("brightnessctl set +5%"),
+        desc="Increses brightness",
+    ),
+    Key(
+        [],
+        "XF86MonBrightnessDown",
+        lazy.spawn("brightnessctl set 5%-"),
+        desc="Decreases brightness",
+    ),
     # Volume
     # Key([], "XF86AudioRaiseVolume", lazy.widget["volume"].increase_vol(), desc="Increases volume"),
     # Key([], "XF86AudioLowerVolume", lazy.widget["volume"].decrease_vol(), desc="Decreases volume"),
-    Key([], "XF86AudioRaiseVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%")),
-    Key([], "XF86AudioLowerVolume", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%")),
+    Key(
+        [],
+        "XF86AudioRaiseVolume",
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"),
+    ),
+    Key(
+        [],
+        "XF86AudioLowerVolume",
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
+    ),
     Key([], "XF86AudioMute", lazy.spawn("amixer -c 0 -q set Master toggle")),
 ]
 
-groups = [Group("1", label = "", layout="monadtall"),
-          Group("2", label = "", layout="max", matches=[Match(wm_class=["google-chrome", "Google-chrome", "Brave-browser", "brave-browser"])]),
-          Group("3", label = "", layout="max", matches=[Match(wm_class=["code", "Code"])]),
-          Group("4", label = "", layout="monadtall", matches=[Match(wm_class=["thunar"])]),
-          Group("5", label = "󰈚", layout="monadtall", matches=[Match(wm_class=["xreader"])]),
-          Group("6", label = "󰜫", layout="max", matches=[Match(wm_class=["obsidian"])]),
-          Group("7", label = "󰒓", layout="monadtall", matches=[Match(wm_class=["transmission-gtk"])]),
-          ]
+groups = [
+    Group("1", label="", layout="monadtall"),
+    Group(
+        "2",
+        label="",
+        layout="max",
+        matches=[
+            Match(
+                wm_class=[
+                    "google-chrome",
+                    "Google-chrome",
+                    "Brave-browser",
+                    "brave-browser",
+                ]
+            )
+        ],
+    ),
+    Group("3", label="", layout="max", matches=[Match(wm_class=["code", "Code"])]),
+    Group("4", label="", layout="monadtall", matches=[Match(wm_class=["thunar"])]),
+    Group("5", label="󰈚", layout="monadtall", matches=[Match(wm_class=["xreader"])]),
+    Group("6", label="󰜫", layout="max", matches=[Match(wm_class=["obsidian"])]),
+    Group(
+        "7",
+        label="󰒓",
+        layout="monadtall",
+        matches=[Match(wm_class=["transmission-gtk"])],
+    ),
+]
 
 for i in groups:
     keys.extend(
@@ -164,67 +223,74 @@ for i in groups:
         ]
     )
 
-colors_nord = [["#2E3440"],   # 0 polar_night_1
-          ["#3B4252"],   # 1 polar_night_2
-          ["#434C5E"],   # 2 polar_night_3
-          ["#4C566A"],   # 3 polar_night_4
-          ["#D8DEE9"],   # 4 snow_storm_1
-          ["#E5E9F0"],   # 5 snow_storm_2
-          ["#ECEFF4"],   # 6 snow_storm_3
-          ["#8FBCBB"],   # 7 frost_1
-          ["#88C0D0"],   # 8 frost_2
-          ["#81A1C1"],   # 9 frost_3
-          ["#5E81AC"],   # 10 frost_4
-          ["#BF616A"],   # 11 aurora_red
-          ["#D08770"],   # 12 aurora_orange
-          ["#EBCB8B"],   # 13 aurora_yellow
-          ["#A3BE8C"],   # 14 aurora_green
-          ["#B48EAD"]]   # 15 aurora_magenta
-        
-colors = [["#f2d5cf"],   # 0 rosewater 
-          ["#eebebe"],   # 1 flamingo
-          ["#f4b8e4"],   # 2 pink
-          ["#ca9ee6"],   # 3 mauve
-          ["#e78284"],   # 4 red
-          ["#ea999c"],   # 5 maroon
-          ["#ef9f76"],   # 6 peach
-          ["#e5c890"],   # 7 yellow
-          ["#a6d189"],   # 8 green
-          ["#81c8be"],   # 9 teal
-          ["#99d1db"],   # 10 sky
-          ["#85c1dc"],   # 11 sapphire
-          ["#8caaee"],   # 12 blue
-          ["#babbf1"],   # 13 lavender
-          ["#c6d0f5"],   # 14 text
-          ["#b5bfe2"],   # 15 subtext1
-          ["#a5adce"],   # 16 subtext0
-          ["#949cbb"],   # 17 overlay2
-          ["#838ba7"],   # 18 overlay1
-          ["#737994"],   # 19 overlay0
-          ["#626880"],   # 20 surface2
-          ["#51576d"],   # 21 surface1
-          ["#414559"],   # 22 surface0
-          ["#303446"],   # 23 base
-          ["#292c3c"],   # 24 mantle
-          ["#232634"]]   # 25 crust
+colors_nord = [
+    ["#2E3440"],  # 0 polar_night_1
+    ["#3B4252"],  # 1 polar_night_2
+    ["#434C5E"],  # 2 polar_night_3
+    ["#4C566A"],  # 3 polar_night_4
+    ["#D8DEE9"],  # 4 snow_storm_1
+    ["#E5E9F0"],  # 5 snow_storm_2
+    ["#ECEFF4"],  # 6 snow_storm_3
+    ["#8FBCBB"],  # 7 frost_1
+    ["#88C0D0"],  # 8 frost_2
+    ["#81A1C1"],  # 9 frost_3
+    ["#5E81AC"],  # 10 frost_4
+    ["#BF616A"],  # 11 aurora_red
+    ["#D08770"],  # 12 aurora_orange
+    ["#EBCB8B"],  # 13 aurora_yellow
+    ["#A3BE8C"],  # 14 aurora_green
+    ["#B48EAD"],
+]  # 15 aurora_magenta
 
-layout_theme = {"border_width": 2,
-                "margin": 5,
-                "border_focus": colors[17],
-                "border_normal": colors[21]
-                }
+colors = [
+    ["#f2d5cf"],  # 0 rosewater
+    ["#eebebe"],  # 1 flamingo
+    ["#f4b8e4"],  # 2 pink
+    ["#ca9ee6"],  # 3 mauve
+    ["#e78284"],  # 4 red
+    ["#ea999c"],  # 5 maroon
+    ["#ef9f76"],  # 6 peach
+    ["#e5c890"],  # 7 yellow
+    ["#a6d189"],  # 8 green
+    ["#81c8be"],  # 9 teal
+    ["#99d1db"],  # 10 sky
+    ["#85c1dc"],  # 11 sapphire
+    ["#8caaee"],  # 12 blue
+    ["#babbf1"],  # 13 lavender
+    ["#c6d0f5"],  # 14 text
+    ["#b5bfe2"],  # 15 subtext1
+    ["#a5adce"],  # 16 subtext0
+    ["#949cbb"],  # 17 overlay2
+    ["#838ba7"],  # 18 overlay1
+    ["#737994"],  # 19 overlay0
+    ["#626880"],  # 20 surface2
+    ["#51576d"],  # 21 surface1
+    ["#414559"],  # 22 surface0
+    ["#303446"],  # 23 base
+    ["#292c3c"],  # 24 mantle
+    ["#232634"],
+]  # 25 crust
+
+layout_theme = {
+    "border_width": 2,
+    "margin": 5,
+    "border_focus": colors[17],
+    "border_normal": colors[21],
+}
 
 layouts = [
     layout.Max(),
     layout.MonadTall(**layout_theme),
-    layout.Columns(border_width = 2,
-                   margin = [4, 3, 2, 3],
-                   margin_on_single = 5,
-                   border_focus = colors[17],
-                   border_normal = colors[21],
-                   border_focus_stack = colors[3],
-                   border_normal_stack = colors[14],
-                   border_on_single = True),
+    layout.Columns(
+        border_width=2,
+        margin=[4, 3, 2, 3],
+        margin_on_single=5,
+        border_focus=colors[17],
+        border_normal=colors[21],
+        border_focus_stack=colors[3],
+        border_normal_stack=colors[14],
+        border_on_single=True,
+    ),
     layout.Floating(**layout_theme),
     # layout.TreeTab(border_width = 2, bg_color = colors[1], active_bg = colors[9], inactive_bg = colors[3], panel_width = 200),
     # layout.MonadThreeCol(**layout_theme),
@@ -248,13 +314,13 @@ powerline = {
 }
 
 widget_defaults = dict(
-    #font = "Hack Nerd Font Bold",
-    font = "JetBrainsMono NF Semibold",
-    fontsize = 14,
-    padding = 2,
-    background = colors[22],
-    foreground = colors[14]
-    )
+    # font = "Hack Nerd Font Bold",
+    font="JetBrainsMono NF Semibold",
+    fontsize=14,
+    padding=2,
+    background=colors[22],
+    foreground=colors[14],
+)
 extension_defaults = widget_defaults.copy()
 
 
@@ -265,22 +331,23 @@ screens = [
                 widget.CurrentLayoutIcon(
                     scale=0.6,
                     background=colors[25],
-                    #**powerline,
-                    ),
+                    # **powerline,
+                ),
                 widget.Spacer(
                     background=colors[25],
                     length=1,
-                    **powerline,),
-                 widget.GroupBox(
+                    **powerline,
+                ),
+                widget.GroupBox(
                     background=colors[23],
-                    this_current_screen_border = colors[12],
+                    this_current_screen_border=colors[12],
                     active=colors[13],
                     inactive=colors[19],
                     borderwidth=2,
                     highlight_method="text",
                     highlight_color=colors[1],
-                    font = "JetBrainsMono NFM",
-                    fontsize = 22,
+                    font="JetBrainsMono NFM",
+                    fontsize=22,
                     padding_x=2,
                     padding_y=1,
                     rounded=False,
@@ -289,50 +356,70 @@ screens = [
                     urgent_alert_method="block",
                     urgent_border=colors[4],
                     **powerline,
-                    ),
+                ),
                 widget.TextBox(
                     text="",
-                    font = 'Hack Nerd Font Bold',
-                    mouse_callbacks={'Button1': lazy.spawn("/home/slats/.config/qtile/scripts/maim-desktop.sh", shell=True),
-                                     'Button3': lazy.spawn("/home/slats/.config/qtile/scripts/maim-select.sh", shell=True),
-                                     'Button2': lazy.spawn("/home/slats/.config/qtile/scripts/maim-window.sh", shell=True)},
+                    font="Hack Nerd Font Bold",
+                    mouse_callbacks={
+                        "Button1": lazy.spawn(
+                            "/home/slats/.config/qtile/scripts/maim-desktop.sh",
+                            shell=True,
+                        ),
+                        "Button3": lazy.spawn(
+                            "/home/slats/.config/qtile/scripts/maim-select.sh",
+                            shell=True,
+                        ),
+                        "Button2": lazy.spawn(
+                            "/home/slats/.config/qtile/scripts/maim-window.sh",
+                            shell=True,
+                        ),
+                    },
                     **powerline,
-                    ),
+                ),
                 widget.WidgetBox(
-                    text_open = " ",
-                    text_closed = " ",
-                    widgets = [
+                    text_open=" ",
+                    text_closed=" ",
+                    widgets=[
                         widget.Memory(
-                            format='{MemUsed: .1f}{mm}', 
+                            format="{MemUsed: .1f}{mm}",
                             background=colors[22],
                             foreground=colors[14],
-                            mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e htop')},
-                            measure_mem = 'G',
-                            ),
+                            mouse_callbacks={
+                                "Button1": lambda: qtile.cmd_spawn(
+                                    terminal + " -e htop"
+                                )
+                            },
+                            measure_mem="G",
+                        ),
                         widget.CPU(
-                            format='  {load_percent}%', 
+                            format="  {load_percent}%",
                             background=colors[22],
                             foreground=colors[14],
-                            mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn(terminal + ' -e htop')},
-                            ),
+                            mouse_callbacks={
+                                "Button1": lambda: qtile.cmd_spawn(
+                                    terminal + " -e htop"
+                                )
+                            },
+                        ),
                         widget.ThermalSensor(
                             format="  {temp:.1f}{unit}",
                             background=colors[22],
                             foreground=colors[14],
                             threshold=60,
-                            ),
-                        ],
+                        ),
+                    ],
                     background=colors[22],
-                    ),
+                ),
                 widget.Spacer(
                     background=colors[22],
                     length=1,
-                    **powerline,),
+                    **powerline,
+                ),
                 widget.Prompt(),
                 widget.Spacer(
-                        length=bar.STRETCH,
-                        **powerline,
-                        ),
+                    length=bar.STRETCH,
+                    **powerline,
+                ),
                 # widget.OpenWeather(
                 #     app_key="f009ccceabb36441891829f2962ba4ba",
                 #     cityid = 498817,
@@ -341,22 +428,22 @@ screens = [
                 #     foreground = colors[25],
                 #     update_interval = 1800,
                 #     **powerline,
-                #     ), 
+                #     ),
                 widget.Clock(
                     format="%a %d %b",
-                    fmt=' {}',
+                    fmt=" {}",
                     background=colors[19],
-                    mouse_callbacks = {'Button1': lambda: qtile.cmd_spawn("gsimplecal")},
+                    mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("gsimplecal")},
                     foreground=colors[25],
                     **powerline,
-                    ),
+                ),
                 widget.Clock(
                     format="%H:%M",
-                    fmt='󰀠 {}',
+                    fmt="󰀠 {}",
                     background=colors[16],
                     foreground=colors[25],
                     **powerline,
-                    ), 
+                ),
                 owm.OpenWeatherMap(
                     api_key="f009ccceabb36441891829f2962ba4ba",
                     background=colors[14],
@@ -364,55 +451,55 @@ screens = [
                     latitude=59.9,
                     longitude=30.3,
                     icon_font="Weather Icons",
-                    format='{icon} {temp:.1f}{temp_units}',
+                    format="{icon} {temp:.1f}{temp_units}",
                     update_interval=1800,
-                    ),
+                ),
                 widget.Spacer(
                     background=colors[14],
                     length=1,
                     **powerline,
-                    ),
+                ),
                 widget.Spacer(
                     length=bar.STRETCH,
                     **powerline,
-                    ),
+                ),
                 widget.CheckUpdates(
-                    update_interval = 600,
-                    distro = 'Arch_checkupdates',
-                    display_format = '󰮯 {updates}',
-                    no_update_string = '󰮯 0',
+                    update_interval=600,
+                    distro="Arch_checkupdates",
+                    display_format="󰮯 {updates}",
+                    no_update_string="󰮯 0",
                     background=colors[12],
-                    colour_have_updates = colors[22],
-                    colour_no_updates = colors[22],
-                    execute = terminal + ' -e paru -Syu',
-                    font = 'Hack Nerd Font Bold',
+                    colour_have_updates=colors[22],
+                    colour_no_updates=colors[22],
+                    execute=terminal + " -e paru -Syu",
+                    font="Hack Nerd Font Bold",
                     **powerline,
-                    ),
+                ),
                 widget.UPowerWidget(
-                    fill_critical = colors[4],
-                    fill_low = colors[6],
-                    fill_normal = colors[8],
-                    fill_charge = colors[12],
-                    border_critical_colour = colors[4],
-                    border_colour = colors[23],
-                    border_charge_colour = colors[23],
-                    background = colors[13],
-                    foreground = colors[22],
-                    margin = 2,
-                    percentage_low = 0.3,
-                    ),
+                    fill_critical=colors[4],
+                    fill_low=colors[6],
+                    fill_normal=colors[8],
+                    fill_charge=colors[12],
+                    border_critical_colour=colors[4],
+                    border_colour=colors[23],
+                    border_charge_colour=colors[23],
+                    background=colors[13],
+                    foreground=colors[22],
+                    margin=2,
+                    percentage_low=0.3,
+                ),
                 widget.Battery(
-                    format = " {percent:2.0%}",
-                    notify_below = 15,
-                    update_interval = 60,
-                    font = "Hack Nerd Font Bold",
-                    notification_timeout = 0,
-                    background = colors[13],
-                    foreground = colors[22],
-                    low_percentage = 0.11,
-                    low_foreground = colors[4],
+                    format=" {percent:2.0%}",
+                    notify_below=15,
+                    update_interval=60,
+                    font="Hack Nerd Font Bold",
+                    notification_timeout=0,
+                    background=colors[13],
+                    foreground=colors[22],
+                    low_percentage=0.11,
+                    low_foreground=colors[4],
                     **powerline,
-                    ),
+                ),
                 # widget.KeyboardLayout(
                 #    configured_keyboards=['us', 'ru,us'],
                 #    background=colors[3],
@@ -422,41 +509,41 @@ screens = [
                 #    **powerline,
                 #    ),
                 MyKeyboardLayout(
-                        text='UNK',
-                        update_interval=0.1,
-                        background=colors[3],
-                        foreground=colors[22],
-                        font = 'Hack Nerd Font Bold',
-                        **powerline,
-                        ),
+                    text="UNK",
+                    update_interval=0.1,
+                    background=colors[3],
+                    foreground=colors[22],
+                    font="Hack Nerd Font Bold",
+                    **powerline,
+                ),
                 widget.Wlan(
-                    foreground = colors[22],
-                    background = colors[12],
+                    foreground=colors[22],
+                    background=colors[12],
                     format="  {percent:2.0%}",
-                    font = 'Hack Nerd Font Bold',
-                    mouse_callbacks={'Button1': lazy.spawn('networkmanager_dmenu')},
-                    update_interval = 60,
+                    font="Hack Nerd Font Bold",
+                    mouse_callbacks={"Button1": lazy.spawn("networkmanager_dmenu")},
+                    update_interval=60,
                     **powerline,
-                    ),
+                ),
                 widget.Backlight(
-                    fmt = "󰃟 {}",
-                    backlight_name = "intel_backlight",
-                    brightness_file = "actual_brightness",
-                    change_command  = "brightnessctl s {0}%",
-                    foreground = colors[22],
-                    background=colors[13], 
-                    step = 5,
-                    font = 'Hack Nerd Font Bold',
+                    fmt="󰃟 {}",
+                    backlight_name="intel_backlight",
+                    brightness_file="actual_brightness",
+                    change_command="brightnessctl s {0}%",
+                    foreground=colors[22],
+                    background=colors[13],
+                    step=5,
+                    font="Hack Nerd Font Bold",
                     **powerline,
-                    ),
+                ),
                 widget.Systray(
-                    background = colors[3],
-                    ),
+                    background=colors[3],
+                ),
                 widget.ALSAWidget(
-                    mode='both',
-                    theme_path='/home/slats/.config/qtile/icons',
-                    background = colors[3],
-                    foreground = colors[25],
+                    mode="both",
+                    theme_path="/home/slats/.config/qtile/icons",
+                    background=colors[3],
+                    foreground=colors[25],
                     bar_width=50,
                     bar_colour_high=colors[7],
                     bar_colour_loud=colors[4],
@@ -464,26 +551,26 @@ screens = [
                     bar_colour_mute=colors[13],
                     limit_normal=50,
                     limit_high=90,
-                    text_format='{volume}%',
-                    ),
+                    text_format="{volume}%",
+                ),
                 widget.Spacer(
                     background=colors[3],
                     length=5,
-                    ),
-                #widget.TextBox(
-                    #text="   ",
-                    #background=colors[4],
-                    #foreground = colors[14],
-                    #font = 'Hack Nerd Font Bold',
-                    #fontsize = 18,
-                    #mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('''
-                            #rofi -show p
-                            #-modi p:'rofi-power-menu --symbols-font "Symbols Nerd Font Mono"'
-                            #-font "JetBrains Mono NF 12"
-                            #-theme-str 'window {width: 12em;} listview {lines: 6;}'
-                            #'''),
-                                     #'Button3': lazy.function(rofi_power_menu)},
-                #),
+                ),
+                # widget.TextBox(
+                # text="   ",
+                # background=colors[4],
+                # foreground = colors[14],
+                # font = 'Hack Nerd Font Bold',
+                # fontsize = 18,
+                # mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('''
+                # rofi -show p
+                # -modi p:'rofi-power-menu --symbols-font "Symbols Nerd Font Mono"'
+                # -font "JetBrains Mono NF 12"
+                # -theme-str 'window {width: 12em;} listview {lines: 6;}'
+                #'''),
+                #'Button3': lazy.function(rofi_power_menu)},
+                # ),
             ],
             24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
@@ -494,8 +581,15 @@ screens = [
 
 # Drag floating layouts.
 mouse = [
-    Drag([mod], "Button1", lazy.window.set_position_floating(), start=lazy.window.get_position()),
-    Drag([mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()),
+    Drag(
+        [mod],
+        "Button1",
+        lazy.window.set_position_floating(),
+        start=lazy.window.get_position(),
+    ),
+    Drag(
+        [mod], "Button3", lazy.window.set_size_floating(), start=lazy.window.get_size()
+    ),
     Click([mod], "Button2", lazy.window.bring_to_front()),
 ]
 
@@ -524,8 +618,8 @@ floating_layout = layout.Floating(
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
     ],
-    border_focus = colors[17],
-    border_width = 2,
+    border_focus=colors[17],
+    border_width=2,
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"
@@ -538,10 +632,11 @@ auto_minimize = True
 # When using the Wayland backend, this can be used to configure input devices.
 wl_input_rules = None
 
+
 @hook.subscribe.startup_once
 def start_once():
-    home = os.path.expanduser('~')
-    subprocess.call([home + '/.config/qtile/scripts/autostart.sh'])
+    home = os.path.expanduser("~")
+    subprocess.call([home + "/.config/qtile/scripts/autostart.sh"])
 
 
 # XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
