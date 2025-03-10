@@ -1,29 +1,3 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 import os
 import subprocess
 
@@ -37,7 +11,6 @@ from libqtile.lazy import lazy
 from qtile_extras import widget
 from qtile_extras.widget import modify
 from qtile_extras.widget.decorations import (
-    BorderDecoration,
     PowerLineDecoration,
     RectDecoration,
 )
@@ -280,8 +253,8 @@ colors = [
     ["#414559"],  # 22 surface0
     ["#303446"],  # 23 base
     ["#292c3c"],  # 24 mantle
-    ["#232634"],
-]  # 25 crust
+    ["#232634"],  # 25 crust
+]
 
 layout_theme = {
     "border_width": 2,
@@ -322,7 +295,59 @@ powerline = {"decorations": [PowerLineDecoration(path="forward_slash")]}
 
 rect = {
     "decorations": [
-        RectDecoration(use_widget_background=True, padding=3, filled=True, radius=7),
+        RectDecoration(use_widget_background=True, padding=4, filled=True, radius=9),
+    ]
+}
+
+rect_spacer = {
+    "decorations": [
+        RectDecoration(use_widget_background=True, padding=6, filled=True, radius=9),
+    ]
+}
+
+rect_groupbox = {
+    "decorations": [
+        RectDecoration(
+            use_widget_background=True,
+            padding_x=0,
+            padding_y=4,
+            filled=True,
+            radius=9,
+            extrawidth=2,
+        ),
+    ]
+}
+
+rect_group = {
+    "decorations": [
+        RectDecoration(
+            use_widget_background=True,
+            padding=4,
+            filled=True,
+            radius=9,
+            group=True,
+        ),
+    ]
+}
+
+rect_extra = {
+    "decorations": [
+        RectDecoration(
+            use_widget_background=True, padding=4, filled=True, radius=9, extrawidth=4
+        ),
+    ]
+}
+
+rect_alsa = {
+    "decorations": [
+        RectDecoration(
+            use_widget_background=True,
+            padding=4,
+            filled=True,
+            radius=9,
+            clip=True,
+            extrawidth=3,
+        ),
     ]
 }
 
@@ -339,29 +364,26 @@ screens = [
     Screen(
         top=bar.Bar(
             [
+                widget.Spacer(
+                    length=3,
+                ),
                 widget.CurrentLayoutIcon(
-                    scale=0.6,
-                    background=colors[25],
-                    foreground=colors[14],
-                    **rect,
+                    scale=0.5,
                 ),
                 widget.Spacer(
-                    background=colors[25],
-                    length=1,
-                    **rect,
-                    # **powerline,
+                    length=8,
                 ),
                 widget.GroupBox(
-                    background=colors[23],
-                    foreground=colors[14],
-                    this_current_screen_border=colors[12],
-                    active=colors[13],
-                    inactive=colors[19],
+                    background=colors[19],
+                    foreground=colors[22],
+                    this_current_screen_border=colors[3],
+                    active=colors[15],
+                    inactive=colors[22],
                     borderwidth=2,
                     highlight_method="text",
                     highlight_color=colors[1],
                     font="JetBrainsMono NFM",
-                    fontsize=22,
+                    fontsize=25,
                     padding_x=2,
                     padding_y=1,
                     rounded=False,
@@ -369,13 +391,17 @@ screens = [
                     disable_drag=True,
                     urgent_alert_method="block",
                     urgent_border=colors[4],
-                    # **powerline,
-                    **rect,
+                    **rect_groupbox,
+                ),
+                widget.Spacer(
+                    length=8,
                 ),
                 widget.TextBox(
-                    text="",
-                    font="Hack Nerd Font Bold",
-                    foreground=colors[14],
+                    text="  ",
+                    foreground=colors[22],
+                    background=colors[16],
+                    font="IBM Plex Sans SmBld",
+                    fontsize=16,
                     mouse_callbacks={
                         "Button1": lazy.spawn(
                             "/home/slats/.config/qtile/scripts/maim-desktop.sh",
@@ -390,139 +416,166 @@ screens = [
                             shell=True,
                         ),
                     },
-                    # **powerline,
-                    **rect,
+                    **rect_extra,
+                ),
+                # widget.Cmus(
+                #    font="IBM Plex Sans SmBld",
+                #    fontsize=16,
+                #    paused_color=colors[19],
+                #    playing_color=colors[14],
+                #    stopped_color=colors[19],
+                #    format="{status_text}({position}/{remaining}) {artist} - {title}",
+                # ),
+                widget.Spacer(
+                    length=3,
+                ),
+                widget.Mpris2(
+                    font="JetBrainsMono NF",
+                    fontsize=14,
+                    foreground=colors[14],
+                    format="{xesam:title} - {xesam:artist}",
+                    paused_text="{track}",
+                    playing_text="  {track}",
+                    max_chars=45,
+                ),
+                widget.Prompt(),
+                widget.Spacer(
+                    length=bar.STRETCH,
+                ),
+                widget.Clock(
+                    format="%a %d %b",
+                    fmt="   {} ",
+                    font="IBM Plex Sans SmBld",
+                    fontsize=16,
+                    mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("gsimplecal")},
+                    foreground=colors[14],
+                ),
+                widget.Spacer(
+                    background=colors[14],
+                    length=2,
+                    **rect_spacer,
+                ),
+                widget.Clock(
+                    format="%H:%M",
+                    fmt=" 󰀠   {} ",
+                    foreground=colors[14],
+                    font="IBM Plex Sans SmBld",
+                    fontsize=16,
+                ),
+                widget.Spacer(
+                    background=colors[14],
+                    length=2,
+                    **rect_spacer,
+                ),
+                owm.OpenWeatherMap(
+                    api_key="f009ccceabb36441891829f2962ba4ba",
+                    foreground=colors[14],
+                    latitude=59.9,
+                    longitude=30.3,
+                    icon_font="Weather Icons",
+                    font="IBM Plex Sans SmBld",
+                    fontsize=16,
+                    format=" {icon}  {temp:.1f}{temp_units}",
+                    update_interval=1800,
+                ),
+                widget.Spacer(
+                    length=bar.STRETCH,
                 ),
                 widget.WidgetBox(
-                    text_open=" ",
-                    text_closed=" ",
-                    foreground=colors[14],
+                    text_open="  ",
+                    text_closed="   ",
+                    foreground=colors[22],
+                    background=colors[12],
+                    fontsize=15,
+                    font="Hack Nerd Font Bold",
                     widgets=[
                         widget.Memory(
                             format="{MemUsed: .1f}{mm}",
-                            foreground=colors[14],
+                            foreground=colors[22],
+                            background=colors[12],
+                            fontsize=15,
                             mouse_callbacks={
                                 "Button1": lambda: qtile.cmd_spawn(
                                     terminal + " -e htop"
                                 )
                             },
                             measure_mem="G",
+                            **rect_group,
                         ),
                         widget.CPU(
                             format="  {load_percent}%",
-                            foreground=colors[14],
+                            foreground=colors[22],
+                            background=colors[12],
+                            fontsize=15,
                             mouse_callbacks={
                                 "Button1": lambda: qtile.cmd_spawn(
                                     terminal + " -e htop"
                                 )
                             },
+                            **rect_group,
                         ),
                         widget.ThermalSensor(
-                            format="  {temp:.1f}{unit}",
-                            foreground=colors[14],
+                            format="  {temp:.1f}{unit} ",
+                            foreground=colors[22],
+                            background=colors[12],
+                            fontsize=15,
                             threshold=60,
+                            **rect_group,
                         ),
                     ],
+                    **rect_group,
                 ),
                 widget.Spacer(
-                    length=1,
-                    # **powerline,
-                ),
-                widget.Prompt(),
-                widget.Spacer(
-                    length=bar.STRETCH,
-                    # **powerline,
-                ),
-                widget.Clock(
-                    format="%a %d %b",
-                    fmt=" {}",
-                    background=colors[19],
-                    mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("gsimplecal")},
-                    foreground=colors[25],
-                    # **powerline,
-                    **rect,
-                ),
-                widget.Clock(
-                    format="%H:%M",
-                    fmt="󰀠 {}",
-                    background=colors[16],
-                    foreground=colors[25],
-                    # **powerline,
-                ),
-                owm.OpenWeatherMap(
-                    api_key="f009ccceabb36441891829f2962ba4ba",
-                    background=colors[14],
-                    foreground=colors[25],
-                    latitude=59.9,
-                    longitude=30.3,
-                    icon_font="Weather Icons",
-                    format="{icon} {temp:.1f}{temp_units}",
-                    update_interval=1800,
-                ),
-                widget.Spacer(
-                    background=colors[14],
-                    length=1,
-                    # **powerline,
-                ),
-                widget.Spacer(
-                    length=bar.STRETCH,
-                    # **powerline,
+                    length=3,
                 ),
                 widget.CheckUpdates(
                     update_interval=600,
                     distro="Arch_checkupdates",
-                    display_format="󰮯 {updates}",
-                    no_update_string="󰮯 0",
-                    background=colors[12],
+                    display_format=" 󰮯 {updates} ",
+                    no_update_string=" 󰮯 0 ",
+                    background=colors[13],
                     colour_have_updates=colors[22],
                     colour_no_updates=colors[22],
                     execute=terminal + " -e paru -Syu",
                     font="Hack Nerd Font Bold",
-                    # **powerline,
+                    fontsize=15,
+                    **rect,
                 ),
-                # widget.KeyboardLayout(
-                #    configured_keyboards=['us', 'ru,us'],
-                #    background=colors[3],
-                #    foreground=colors[22],
-                #    display_map={'us' : 'US', 'ru' : 'RU'},
-                #    font = 'Hack Nerd Font Bold',
-                #    **powerline,
-                #    ),
-                MyKeyboardLayout(
-                    text="UNK",
-                    update_interval=0.1,
-                    background=colors[3],
-                    foreground=colors[22],
-                    font="Hack Nerd Font Bold",
-                    # **powerline,
+                widget.Spacer(
+                    length=3,
                 ),
                 widget.Wlan(
                     foreground=colors[22],
-                    background=colors[12],
-                    format="  {percent:2.0%}",
+                    background=colors[3],
+                    format="   {percent:2.0%} ",
                     font="Hack Nerd Font Bold",
+                    fontsize=15,
                     mouse_callbacks={"Button1": lazy.spawn("networkmanager_dmenu")},
                     update_interval=60,
-                    # **powerline,
+                    **rect,
+                ),
+                widget.Spacer(
+                    length=3,
                 ),
                 widget.Backlight(
-                    fmt="󰃟 {}",
+                    fmt=" 󰃟 {} ",
                     backlight_name="intel_backlight",
                     brightness_file="actual_brightness",
                     change_command="brightnessctl s {0}%",
                     foreground=colors[22],
-                    background=colors[13],
+                    background=colors[2],
                     step=5,
                     font="Hack Nerd Font Bold",
-                    # **powerline,
+                    fontsize=15,
+                    **rect,
                 ),
-                widget.Systray(
-                    background=colors[3],
+                widget.Spacer(
+                    length=3,
                 ),
                 widget.ALSAWidget(
                     mode="both",
                     theme_path="/home/slats/.config/qtile/icons",
-                    background=colors[3],
+                    background=colors[5],
                     foreground=colors[25],
                     bar_width=50,
                     bar_colour_high=colors[7],
@@ -532,19 +585,27 @@ screens = [
                     limit_normal=50,
                     limit_high=90,
                     text_format="{volume}%",
+                    **rect_alsa,
                 ),
                 widget.Spacer(
-                    background=colors[3],
+                    length=3,
+                ),
+                MyKeyboardLayout(
+                    text="UNK",
+                    update_interval=0.1,
+                    foreground=colors[14],
+                    font="Hack Nerd Font Bold",
+                    fontsize=15,
+                ),
+                widget.Systray(),
+                widget.Spacer(
                     length=5,
                 ),
             ],
-            30,
+            33,
             background=colors[22],
-            # size=30,
             opacity=1,
             margin=[5, 5, 1, 5],
-            border_width=[1, 1, 1, 1],
-            border_color="",
         ),
     ),
 ]
@@ -620,12 +681,4 @@ def disable_floating(window):
         window.cmd_disable_floating()
 
 
-# XXX: Gasp! We're lying here. In fact, nobody really uses or cares about this
-# string besides java UI toolkits; you can see several discussions on the
-# mailing lists, GitHub issues, and other WM documentation that suggest setting
-# this string if your java app doesn't work correctly. We may as well just lie
-# and say that we're a working one by default.
-#
-# We choose LG3D to maximize irony: it is a 3D non-reparenting WM written in
-# java that happens to be on java's whitelist.
 wmname = "QTile"
