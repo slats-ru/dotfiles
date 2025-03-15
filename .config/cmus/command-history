@@ -1,0 +1,48 @@
+bind -f common t run easytag
+run id3tool {} -a "Tarja"
+run id3v2 {}t
+run id3v2 {}
+w
+run id3v2 {} -a "Tarja"
+bind common t push run id3tool {}
+clear -q
+run id3v2 -a Tarja {}
+bind -f common t push run id3v2 {}
+run mp3info -a Tarja {}
+run mp3info {}
+run mp3info -i {}
+bind common t push run mp3info {}
+bind common ^T push run mp3info {}
+bind -f common t run easytag {}
+run id3tool {}
+bind common 0 run mp3info {}
+bind -f common t shell /usr/local/bin/cmus-edit-tags.sh
+set smart_artist_sort=false
+colorscheme catppuccin
+set resume=true
+theme catppuccin
+set status_display_program=cmusfm
+set status_display_program=home/slats/.config/cmus/cmus_status_scrobbler.py
+set status_display_program=~/.config/cmus/cmus_status_scrobbler.py
+set status_display_program=/home/slats/.config/cmus/cmus_status_scrobbler.py
+q
+set mixer.alsa.device=USB Mixer
+set mixer.alsa.channel=hw:1
+set dsp.alsa.device=hw:1
+set mixer.oss.channel=Master
+set mixer.alsa.device=default
+set dsp.alsa.device=default
+set output_plugin=alsa
+set output_plugin=als
+set output_plugin=pulse
+wq
+add -p
+bind -f common u shell /usr/local/bin/update-cmus-library.sh
+set stop_after_queue=true
+set start_view=queue
+set show_current_bitrate=true
+W
+set start_view=tree
+set mixer.alsa.device=
+run add -q
+add -q

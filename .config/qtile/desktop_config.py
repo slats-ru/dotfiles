@@ -95,6 +95,18 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
+    Key(
+        [mod, "shift", "control"],
+        "h",
+        lazy.layout.swap_column_left(),
+        desc="Swap column left",
+    ),
+    Key(
+        [mod, "shift", "control"],
+        "l",
+        lazy.layout.swap_column_right(),
+        desc="Swap column right",
+    ),
     Key([mod, "shift"], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
     Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
     # Essentials
@@ -118,6 +130,7 @@ keys = [
         desc="Brave",
     ),
     Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
+    Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
     # Brightness
     Key(
         [],
@@ -148,11 +161,11 @@ keys = [
 ]
 
 groups = [
-    Group("1", label="", layout="monadtall"),
+    Group("1", label="", layout="columns"),
     Group(
         "2",
         label="",
-        layout="monadtall",
+        layout="columns",
         matches=[
             Match(
                 wm_class=[
@@ -164,24 +177,22 @@ groups = [
             )
         ],
     ),
-    Group(
-        "3", label="", layout="monadtall", matches=[Match(wm_class=["code", "Code"])]
-    ),
-    Group("4", label="", layout="monadtall", matches=[Match(wm_class=["thunar"])]),
+    Group("3", label="", layout="columns", matches=[Match(wm_class=["code", "Code"])]),
+    Group("4", label="", layout="columns", matches=[Match(wm_class=["thunar"])]),
     Group(
         "5",
         label="󰈚",
-        layout="monadtall",
+        layout="columns",
         matches=[Match(wm_class=["xreader", "com.github.johnfactotum.Foliate"])],
     ),
-    Group("6", label="󰜫", layout="monadtall", matches=[Match(wm_class=["obsidian"])]),
+    Group("6", label="󰜫", layout="columns", matches=[Match(wm_class=["obsidian"])]),
     Group(
         "7",
         label="󰒓",
-        layout="monadtall",
+        layout="columns",
         matches=[Match(wm_class=["transmission-gtk"])],
     ),
-    Group("8", label="", layout="Floating", matches=[Match(wm_class=["mpv"])]),
+    Group("8", label="", layout="columns", matches=[Match(wm_class=["mpv"])]),
 ]
 
 for i in groups:
@@ -265,7 +276,7 @@ layout_theme = {
 
 layouts = [
     layout.Max(),
-    layout.MonadTall(**layout_theme),
+    # layout.MonadTall(**layout_theme),
     layout.Columns(
         border_width=2,
         margin=[4, 3, 2, 3],

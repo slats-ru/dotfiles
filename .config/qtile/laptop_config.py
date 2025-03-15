@@ -1,29 +1,3 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 import os
 import subprocess
 
@@ -118,6 +92,18 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
+    Key(
+        [mod, "shift", "control"],
+        "h",
+        lazy.layout.swap_column_left(),
+        desc="Swap column left",
+    ),
+    Key(
+        [mod, "shift", "control"],
+        "l",
+        lazy.layout.swap_column_right(),
+        desc="Swap column right",
+    ),
     Key([mod, "shift"], "f", lazy.window.toggle_floating(), desc="Toggle floating"),
     Key([mod], "f", lazy.window.toggle_fullscreen(), desc="Toggle fullscreen"),
     # Essentials
@@ -141,6 +127,7 @@ keys = [
     Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
     Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
     Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
+    Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
     # Brightness
     Key(
         [],
@@ -171,11 +158,11 @@ keys = [
 ]
 
 groups = [
-    Group("1", label="", layout="monadtall"),
+    Group("1", label="", layout="columns"),
     Group(
         "2",
         label="",
-        layout="max",
+        layout="columns",
         matches=[
             Match(
                 wm_class=[
@@ -187,14 +174,14 @@ groups = [
             )
         ],
     ),
-    Group("3", label="", layout="max", matches=[Match(wm_class=["code", "Code"])]),
-    Group("4", label="", layout="monadtall", matches=[Match(wm_class=["thunar"])]),
-    Group("5", label="󰈚", layout="monadtall", matches=[Match(wm_class=["xreader"])]),
-    Group("6", label="󰜫", layout="max", matches=[Match(wm_class=["obsidian"])]),
+    Group("3", label="", layout="columns", matches=[Match(wm_class=["code", "Code"])]),
+    Group("4", label="", layout="columns", matches=[Match(wm_class=["thunar"])]),
+    Group("5", label="󰈚", layout="columns", matches=[Match(wm_class=["xreader"])]),
+    Group("6", label="󰜫", layout="columns", matches=[Match(wm_class=["obsidian"])]),
     Group(
         "7",
         label="󰒓",
-        layout="monadtall",
+        layout="columns",
         matches=[Match(wm_class=["transmission-gtk"])],
     ),
 ]
@@ -280,7 +267,7 @@ layout_theme = {
 
 layouts = [
     layout.Max(),
-    layout.MonadTall(**layout_theme),
+    # layout.MonadTall(**layout_theme),
     layout.Columns(
         border_width=2,
         margin=[4, 3, 2, 3],
