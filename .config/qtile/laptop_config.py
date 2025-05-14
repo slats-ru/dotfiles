@@ -162,7 +162,7 @@ groups = [
     Group(
         "2",
         label="",
-        layout="columns",
+        layout="max",
         matches=[
             Match(
                 wm_class=[
@@ -174,10 +174,15 @@ groups = [
             )
         ],
     ),
-    Group("3", label="", layout="columns", matches=[Match(wm_class=["code", "Code"])]),
+    Group("3", label="", layout="max", matches=[Match(wm_class=["code", "Code"])]),
     Group("4", label="", layout="columns", matches=[Match(wm_class=["thunar"])]),
-    Group("5", label="󰈚", layout="columns", matches=[Match(wm_class=["xreader"])]),
-    Group("6", label="󰜫", layout="columns", matches=[Match(wm_class=["obsidian"])]),
+    Group(
+        "5",
+        label="󰈚",
+        layout="columns",
+        matches=[Match(wm_class=["xreader", "com.github.johnfactotum.Foliate"])],
+    ),
+    Group("6", label="󰜫", layout="max", matches=[Match(wm_class=["obsidian"])]),
     Group(
         "7",
         label="󰒓",
