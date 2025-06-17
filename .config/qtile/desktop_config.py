@@ -80,7 +80,7 @@ keys = [
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key(
         [mod, "control"],
-        "r",
+        "w",
         lazy.layout.reset(),
         desc="Reset all window sizes (monadtall)",
     ),
