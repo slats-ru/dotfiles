@@ -77,7 +77,7 @@ keys = [
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
     Key(
         [mod, "control"],
-        "r",
+        "w",
         lazy.layout.reset(),
         desc="Reset all window sizes (monadtall)",
     ),
@@ -122,6 +122,12 @@ keys = [
         "b",
         lazy.spawn("brave --proxy-server='socks5://localhost:12334'"),
         desc="Brave",
+    ),
+    Key(
+        [mod],
+        "g",
+        lazy.spawn("google-chrome-stable --proxy-server='socks5://localhost:12334'"),
+        desc="Google Chrome",
     ),
     Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc="Thunar"),
     Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
