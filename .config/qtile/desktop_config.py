@@ -129,7 +129,7 @@ keys = [
         lazy.spawn("brave --proxy-server='socks5://localhost:12334'"),
         desc="Brave",
     ),
-    Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
+    # Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
     Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
     # Brightness
     Key(
@@ -158,6 +158,11 @@ keys = [
         lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
     ),
     Key([], "XF86AudioMute", lazy.spawn("amixer -c 0 -q set Master toggle")),
+    Key(
+        [mod],
+        "s",
+        lazy.spawn("/home/slats/.config/qtile/scripts/maim-desktop.sh", shell=True),
+    ),
 ]
 
 groups = [
