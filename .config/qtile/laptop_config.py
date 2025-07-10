@@ -1,7 +1,6 @@
 import os
 import subprocess
 
-import owm
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -11,6 +10,8 @@ from libqtile.lazy import lazy
 from qtile_extras import widget
 from qtile_extras.widget import modify
 from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
+
+import owm
 
 mod = "mod4"
 terminal = "kitty"
@@ -132,7 +133,7 @@ keys = [
     Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc="Thunar"),
     Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
     Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
-    Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
+    # Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
     Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
     # Brightness
     Key(
@@ -161,6 +162,11 @@ keys = [
         lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
     ),
     Key([], "XF86AudioMute", lazy.spawn("amixer -c 0 -q set Master toggle")),
+    Key(
+        [mod],
+        "s",
+        lazy.spawn("/home/slats/.config/qtile/scripts/maim-desktop.sh", shell=True),
+    ),
 ]
 
 groups = [
