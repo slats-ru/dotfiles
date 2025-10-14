@@ -614,6 +614,7 @@ screens = [
                     fontsize=15,
                 ),
                 widget.Systray(),
+                widget.StatusNotifier(),
                 widget.Spacer(
                     length=5,
                 ),

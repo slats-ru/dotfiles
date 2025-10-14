@@ -6,4 +6,5 @@ dunst &
 picom &
 clight &
 mpv --volume=40 --no-video /home/slats/.config/qtile/resources/boot.wav &
-hiddify &
+# hiddify &
+v2rayn &
