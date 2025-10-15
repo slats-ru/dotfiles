@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+import owm
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -10,8 +11,6 @@ from libqtile.lazy import lazy
 from qtile_extras import widget
 from qtile_extras.widget import modify
 from qtile_extras.widget.decorations import PowerLineDecoration, RectDecoration
-
-import owm
 
 mod = "mod4"
 terminal = "kitty"
@@ -335,7 +334,6 @@ screens = [
                 widget.CurrentLayoutIcon(
                     scale=0.6,
                     background=colors[25],
-                    # **powerline,
                 ),
                 widget.Spacer(
                     background=colors[25],
@@ -424,15 +422,6 @@ screens = [
                     length=bar.STRETCH,
                     **powerline,
                 ),
-                # widget.OpenWeather(
-                #     app_key="f009ccceabb36441891829f2962ba4ba",
-                #     cityid = 498817,
-                #     format = '{icon} {main_temp:.1f}°{units_temperature}',
-                #     background = colors[19],
-                #     foreground = colors[25],
-                #     update_interval = 1800,
-                #     **powerline,
-                #     ),
                 widget.Clock(
                     format="%a %d %b",
                     fmt=" {}",
@@ -504,14 +493,6 @@ screens = [
                     low_foreground=colors[4],
                     **powerline,
                 ),
-                # widget.KeyboardLayout(
-                #    configured_keyboards=['us', 'ru,us'],
-                #    background=colors[3],
-                #    foreground=colors[22],
-                #    display_map={'us' : 'US', 'ru' : 'RU'},
-                #    font = 'Hack Nerd Font Bold',
-                #    **powerline,
-                #    ),
                 MyKeyboardLayout(
                     text="UNK",
                     update_interval=0.1,
@@ -543,6 +524,7 @@ screens = [
                 widget.StatusNotifier(
                     background=colors[3],
                 ),
+                widget.Systray(background=colors[3]),
                 widget.ALSAWidget(
                     mode="both",
                     theme_path="/home/slats/.config/qtile/icons",
@@ -561,24 +543,8 @@ screens = [
                     background=colors[3],
                     length=5,
                 ),
-                # widget.TextBox(
-                # text="   ",
-                # background=colors[4],
-                # foreground = colors[14],
-                # font = 'Hack Nerd Font Bold',
-                # fontsize = 18,
-                # mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('''
-                # rofi -show p
-                # -modi p:'rofi-power-menu --symbols-font "Symbols Nerd Font Mono"'
-                # -font "JetBrains Mono NF 12"
-                # -theme-str 'window {width: 12em;} listview {lines: 6;}'
-                #'''),
-                #'Button3': lazy.function(rofi_power_menu)},
-                # ),
             ],
             24,
-            # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-            # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
     ),
 ]
