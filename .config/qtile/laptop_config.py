@@ -115,7 +115,7 @@ keys = [
     Key([mod], "p", lazy.function(rofi_power_menu), desc="Poweroff"),
     # Key([mod], "space", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
     # Applications launcher
-    Key([mod], "s", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
+    # Key([mod], "s", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key(
@@ -132,7 +132,7 @@ keys = [
     ),
     Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc="Thunar"),
     Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
-    Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
+    # Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
     # Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
     Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
     # Brightness
@@ -540,7 +540,7 @@ screens = [
                     font="Hack Nerd Font Bold",
                     **powerline,
                 ),
-                widget.Systray(
+                widget.StatusNotifier(
                     background=colors[3],
                 ),
                 widget.ALSAWidget(
