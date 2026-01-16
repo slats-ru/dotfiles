@@ -3,6 +3,7 @@
 import requests
 from libqtile import pangocffi
 from libqtile.log_utils import logger
+
 from libqtile.widget import base
 
 __author__ = "Simon Kennedy <sffjunkie+code@mail.com>"
@@ -117,7 +118,7 @@ CONDITION_CODES = {
 
 # Handle the change of widget base class in the Qtile project
 try:
-    BaseClass = base.ThreadPoolText
+    BaseClass = base.BackgroundPoll
     NewWidgetBase = True
 except AttributeError:
     BaseClass = base.ThreadedPollText  # pylint: disable=no-member

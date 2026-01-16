@@ -113,6 +113,7 @@ return {
     event = "VeryLazy",
     opts = {
       plugins = { spelling = true },
+      notify = false,
       defaults = {
         mode = { "n", "v" },
         ["g"] = { name = "+goto" },

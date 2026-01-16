@@ -60,36 +60,13 @@ return {
     },
 
     {
-        -- A snazzy buffer line with tabpage integration
-        'akinsho/bufferline.nvim',
-        version = "*",
-        dependencies = 'nvim-tree/nvim-web-devicons',
-        after = "catppuccin",
-        config = function()
-            require("bufferline").setup {
-            highlights = require("catppuccin.groups.integrations.bufferline").get()
-            }
-        end,
-        opts = {
-            options = {
-                always_show_bufferline = true,
-                mode = "buffers",
-                offsets = {
-                    {
-                        filetype = "neo-tree",
-                        text = "Neo-tree",
-                        highlight = "Directory",
-                        text_align = "left",
-                    },
-                },
-                separator_style = "slant",
-                diagnostics = "nvim_lsp",
-                diagnostics_indicator = function(count, level, diagnostics_dict, context)
-                    local icon = level:match("error") and " " or " "
-                    return " " .. icon .. count
-                end,
-            }
-        }
+    "akinsho/bufferline.nvim",
+    optional = true,
+    opts = function(_, opts)
+        if (vim.g.colors_name or ""):find("catppuccin") then
+        opts.highlights = require("catppuccin.special.bufferline").get_theme()
+        end
+    end,
     },
 
     {
