@@ -27,7 +27,7 @@ def rofi_power_menu(qtile):
                     """)
 
 
-class MyKeyboardLayout(old_widget.base.ThreadPoolText):
+class MyKeyboardLayout(old_widget.base.BackgroundPoll):
     def __init__(self, **config):
         super().__init__(**config)
         self.add_callbacks({"Button1": self.next_keyboard})
