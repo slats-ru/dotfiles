@@ -1,19 +1,17 @@
-import os
 import subprocess
 
-import owm
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-
-#  from libqtile.utils import send_notification
 from qtile_extras import widget
 from qtile_extras.widget import modify
 from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration,
 )
+
+import owm
 
 mod = "mod4"
 terminal = "kitty"
@@ -28,6 +26,10 @@ def rofi_power_menu(qtile):
                     -font "JetBrains Mono NF 12" 
                     -theme-str 'window {width: 12em;} listview {lines: 4;}'
                     """)
+
+
+def virt_start(qtile):
+    qtile.cmd_spawn("virt-manager")
 
 
 class MyKeyboardLayout(old_widget.base.BackgroundPoll):
@@ -47,8 +49,6 @@ MyKeyboardLayout = modify(MyKeyboardLayout, initialise=False)
 
 
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Switch between windows
     Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
     Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
@@ -115,22 +115,26 @@ keys = [
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "p", lazy.function(rofi_power_menu), desc="Poweroff"),
-    # Key([mod], "space", lazy.widget["keyboardlayout"].next_keyboard(), desc="Next keyboard layout."),
     # Applications launcher
     Key([mod], "s", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "t", lazy.spawn("thunar /mnt/data/Downloads"), desc="Thunar"),
     Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
-    Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
+    # Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
     Key(
         [mod],
         "b",
         lazy.spawn("brave --proxy-server='socks5://localhost:12334'"),
         desc="Brave",
     ),
-    # Key([mod], "y", lazy.spawn(terminal + " -e yazi"), desc="Yazi"),
     Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
+    Key(
+        [mod],
+        "m",
+        lazy.spawn("/home/slats/.config/qtile/scripts/virt-start.sh", shell=True),
+        desc="VirtManager",
+    ),
     # Brightness
     Key(
         [],
@@ -182,7 +186,12 @@ groups = [
             )
         ],
     ),
-    Group("3", label="", layout="columns", matches=[Match(wm_class=["code", "Code"])]),
+    Group(
+        "3",
+        label="",
+        layout="columns",
+        matches=[Match(wm_class=["code", "Code", "virt-manager"])],
+    ),
     Group("4", label="", layout="columns", matches=[Match(wm_class=["thunar"])]),
     Group(
         "5",
@@ -197,7 +206,6 @@ groups = [
         layout="columns",
         matches=[Match(wm_class=["transmission-gtk"])],
     ),
-    Group("8", label="", layout="columns", matches=[Match(wm_class=["mpv"])]),
 ]
 
 for i in groups:
@@ -224,24 +232,6 @@ for i in groups:
         ]
     )
 
-colors_nord = [
-    ["#2E3440"],  # 0 polar_night_1
-    ["#3B4252"],  # 1 polar_night_2
-    ["#434C5E"],  # 2 polar_night_3
-    ["#4C566A"],  # 3 polar_night_4
-    ["#D8DEE9"],  # 4 snow_storm_1
-    ["#E5E9F0"],  # 5 snow_storm_2
-    ["#ECEFF4"],  # 6 snow_storm_3
-    ["#8FBCBB"],  # 7 frost_1
-    ["#88C0D0"],  # 8 frost_2
-    ["#81A1C1"],  # 9 frost_3
-    ["#5E81AC"],  # 10 frost_4
-    ["#BF616A"],  # 11 aurora_red
-    ["#D08770"],  # 12 aurora_orange
-    ["#EBCB8B"],  # 13 aurora_yellow
-    ["#A3BE8C"],  # 14 aurora_green
-    ["#B48EAD"],
-]  # 15 aurora_magenta
 
 colors = [
     ["#f2d5cf"],  # 0 rosewater
@@ -434,14 +424,6 @@ screens = [
                     },
                     **rect_extra,
                 ),
-                # widget.Cmus(
-                #    font="IBM Plex Sans SmBld",
-                #    fontsize=16,
-                #    paused_color=colors[19],
-                #    playing_color=colors[14],
-                #    stopped_color=colors[19],
-                #    format="{status_text}({position}/{remaining}) {artist} - {title}",
-                # ),
                 widget.Spacer(
                     length=3,
                 ),
@@ -560,6 +542,31 @@ screens = [
                 widget.Spacer(
                     length=3,
                 ),
+                widget.UPowerWidget(
+                    fill_critical=colors[4],
+                    fill_low=colors[6],
+                    fill_normal=colors[8],
+                    fill_charge=colors[12],
+                    border_critical_colour=colors[4],
+                    border_colour=colors[23],
+                    border_charge_colour=colors[23],
+                    background=colors[13],
+                    foreground=colors[22],
+                    margin=2,
+                    percentage_low=0.3,
+                ),
+                widget.Battery(
+                    format=" {percent:2.0%}",
+                    notify_below=15,
+                    update_interval=60,
+                    font="Hack Nerd Font Bold",
+                    notification_timeout=0,
+                    background=colors[13],
+                    foreground=colors[22],
+                    low_percentage=0.11,
+                    low_foreground=colors[4],
+                    **rect,
+                ),
                 widget.Wlan(
                     foreground=colors[22],
                     background=colors[3],
@@ -579,7 +586,7 @@ screens = [
                     brightness_file="actual_brightness",
                     change_command="brightnessctl s {0}%",
                     foreground=colors[22],
-                    background=colors[2],
+                    background=colors[13],
                     step=5,
                     font="Hack Nerd Font Bold",
                     fontsize=15,
@@ -591,7 +598,7 @@ screens = [
                 widget.ALSAWidget(
                     mode="both",
                     theme_path="/home/slats/.config/qtile/icons",
-                    background=colors[5],
+                    background=colors[12],
                     foreground=colors[25],
                     bar_width=50,
                     bar_colour_high=colors[7],
