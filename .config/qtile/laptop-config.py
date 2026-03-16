@@ -1,5 +1,6 @@
 import subprocess
 
+import owm
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -10,8 +11,6 @@ from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration,
 )
-
-import owm
 
 mod = "mod4"
 terminal = "kitty"
@@ -26,10 +25,6 @@ def rofi_power_menu(qtile):
                     -font "JetBrains Mono NF 12" 
                     -theme-str 'window {width: 12em;} listview {lines: 4;}'
                     """)
-
-
-def virt_start(qtile):
-    qtile.cmd_spawn("virt-manager")
 
 
 class MyKeyboardLayout(old_widget.base.BackgroundPoll):
@@ -119,7 +114,7 @@ keys = [
     Key([mod], "s", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    Key([mod], "t", lazy.spawn("thunar /mnt/data/Downloads"), desc="Thunar"),
+    Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc="Thunar"),
     Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
     # Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
     Key(
@@ -129,12 +124,7 @@ keys = [
         desc="Brave",
     ),
     Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
-    Key(
-        [mod],
-        "m",
-        lazy.spawn("/home/slats/.config/qtile/scripts/virt-start.sh", shell=True),
-        desc="VirtManager",
-    ),
+    Key([mod], "m", lazy.spawn("virt-manager"), desc="VirtManager"),
     # Brightness
     Key(
         [],
@@ -542,6 +532,11 @@ screens = [
                 widget.Spacer(
                     length=3,
                 ),
+                widget.Spacer(
+                    length=11,
+                    background=colors[3],
+                    **rect_group,
+                ),
                 widget.UPowerWidget(
                     fill_critical=colors[4],
                     fill_low=colors[6],
@@ -550,26 +545,27 @@ screens = [
                     border_critical_colour=colors[4],
                     border_colour=colors[23],
                     border_charge_colour=colors[23],
-                    background=colors[13],
+                    background=colors[3],
                     foreground=colors[22],
                     margin=2,
                     percentage_low=0.3,
+                    **rect_group,
                 ),
                 widget.Battery(
-                    format=" {percent:2.0%}",
+                    format="{percent:2.0%} ",
                     notify_below=15,
                     update_interval=60,
                     font="Hack Nerd Font Bold",
                     notification_timeout=0,
-                    background=colors[13],
+                    background=colors[3],
                     foreground=colors[22],
                     low_percentage=0.11,
                     low_foreground=colors[4],
-                    **rect,
+                    **rect_group,
                 ),
                 widget.Wlan(
                     foreground=colors[22],
-                    background=colors[3],
+                    background=colors[12],
                     format="   {percent:2.0%} ",
                     font="Hack Nerd Font Bold",
                     fontsize=15,
@@ -598,7 +594,7 @@ screens = [
                 widget.ALSAWidget(
                     mode="both",
                     theme_path="/home/slats/.config/qtile/icons",
-                    background=colors[12],
+                    background=colors[3],
                     foreground=colors[25],
                     bar_width=50,
                     bar_colour_high=colors[7],
