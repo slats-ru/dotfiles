@@ -1,6 +1,5 @@
 import subprocess
 
-import owm
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -11,6 +10,8 @@ from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration,
 )
+
+import owm
 
 mod = "mod4"
 terminal = "kitty"
@@ -25,10 +26,6 @@ def rofi_power_menu(qtile):
                     -font "JetBrains Mono NF 12" 
                     -theme-str 'window {width: 12em;} listview {lines: 4;}'
                     """)
-
-
-def virt_start(qtile):
-    qtile.cmd_spawn("virt-manager")
 
 
 class MyKeyboardLayout(old_widget.base.BackgroundPoll):
@@ -128,12 +125,7 @@ keys = [
         desc="Brave",
     ),
     Key([mod], "c", lazy.spawn(terminal + " -e cmus"), desc="Cmus"),
-    Key(
-        [mod],
-        "m",
-        lazy.spawn("/home/slats/.config/qtile/scripts/virt-start.sh", shell=True),
-        desc="VirtManager",
-    ),
+    Key([mod], "m", lazy.spawn("virt-manager"), desc="VirtManager"),
     # Brightness
     Key(
         [],
