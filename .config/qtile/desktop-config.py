@@ -1,5 +1,6 @@
 import subprocess
 
+import owm
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -11,14 +12,12 @@ from qtile_extras.widget.decorations import (
     RectDecoration,
 )
 
-import owm
-
 mod = "mod4"
 terminal = "kitty"
 
 
 def rofi_power_menu(qtile):
-    qtile.cmd_spawn("""
+    qtile.spawn("""
                     rofi -show menu 
                     -modi menu:'rofi-power-menu 
                     --choices=shutdown/reboot/suspend/logout 
@@ -224,24 +223,6 @@ for i in groups:
         ]
     )
 
-colors_nord = [
-    ["#2E3440"],  # 0 polar_night_1
-    ["#3B4252"],  # 1 polar_night_2
-    ["#434C5E"],  # 2 polar_night_3
-    ["#4C566A"],  # 3 polar_night_4
-    ["#D8DEE9"],  # 4 snow_storm_1
-    ["#E5E9F0"],  # 5 snow_storm_2
-    ["#ECEFF4"],  # 6 snow_storm_3
-    ["#8FBCBB"],  # 7 frost_1
-    ["#88C0D0"],  # 8 frost_2
-    ["#81A1C1"],  # 9 frost_3
-    ["#5E81AC"],  # 10 frost_4
-    ["#BF616A"],  # 11 aurora_red
-    ["#D08770"],  # 12 aurora_orange
-    ["#EBCB8B"],  # 13 aurora_yellow
-    ["#A3BE8C"],  # 14 aurora_green
-    ["#B48EAD"],
-]  # 15 aurora_magenta
 
 colors = [
     ["#f2d5cf"],  # 0 rosewater
@@ -463,7 +444,7 @@ screens = [
                     fmt="   {} ",
                     font="IBM Plex Sans SmBld",
                     fontsize=16,
-                    mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("gsimplecal")},
+                    mouse_callbacks={"Button1": lambda: qtile.spawn("gsimplecal")},
                     foreground=colors[14],
                 ),
                 widget.Spacer(
@@ -511,9 +492,7 @@ screens = [
                             background=colors[12],
                             fontsize=15,
                             mouse_callbacks={
-                                "Button1": lambda: qtile.cmd_spawn(
-                                    terminal + " -e htop"
-                                )
+                                "Button1": lambda: qtile.spawn(terminal + " -e htop")
                             },
                             measure_mem="G",
                             **rect_group,
@@ -524,9 +503,7 @@ screens = [
                             background=colors[12],
                             fontsize=15,
                             mouse_callbacks={
-                                "Button1": lambda: qtile.cmd_spawn(
-                                    terminal + " -e htop"
-                                )
+                                "Button1": lambda: qtile.spawn(terminal + " -e htop")
                             },
                             **rect_group,
                         ),
