@@ -17,7 +17,7 @@ terminal = "kitty"
 
 
 def rofi_power_menu(qtile):
-    qtile.cmd_spawn("""
+    qtile.spawn("""
                     rofi -show menu 
                     -modi menu:'rofi-power-menu 
                     --choices=shutdown/reboot/suspend/logout 
@@ -435,7 +435,7 @@ screens = [
                     fmt="   {} ",
                     font="IBM Plex Sans SmBld",
                     fontsize=16,
-                    mouse_callbacks={"Button1": lambda: qtile.cmd_spawn("gsimplecal")},
+                    mouse_callbacks={"Button1": lambda: qtile.spawn("gsimplecal")},
                     foreground=colors[14],
                 ),
                 widget.Spacer(
@@ -483,9 +483,7 @@ screens = [
                             background=colors[12],
                             fontsize=15,
                             mouse_callbacks={
-                                "Button1": lambda: qtile.cmd_spawn(
-                                    terminal + " -e htop"
-                                )
+                                "Button1": lambda: qtile.spawn(terminal + " -e htop")
                             },
                             measure_mem="G",
                             **rect_group,
@@ -496,9 +494,7 @@ screens = [
                             background=colors[12],
                             fontsize=15,
                             mouse_callbacks={
-                                "Button1": lambda: qtile.cmd_spawn(
-                                    terminal + " -e htop"
-                                )
+                                "Button1": lambda: qtile.spawn(terminal + " -e htop")
                             },
                             **rect_group,
                         ),
