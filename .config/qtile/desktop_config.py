@@ -1,6 +1,4 @@
 import subprocess
-
-import owm
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -111,7 +109,6 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "p", lazy.function(rofi_power_menu), desc="Poweroff"),
     # Applications launcher
-    Key([mod], "s", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     Key([mod], "t", lazy.spawn("thunar /mnt/data/Downloads"), desc="Thunar"),
@@ -139,8 +136,6 @@ keys = [
         desc="Decreases brightness",
     ),
     # Volume
-    # Key([], "XF86AudioRaiseVolume", lazy.widget["volume"].increase_vol(), desc="Increases volume"),
-    # Key([], "XF86AudioLowerVolume", lazy.widget["volume"].decrease_vol(), desc="Decreases volume"),
     Key(
         [],
         "XF86AudioRaiseVolume",
@@ -262,7 +257,6 @@ layout_theme = {
 
 layouts = [
     layout.Max(),
-    # layout.MonadTall(**layout_theme),
     layout.Columns(
         border_width=2,
         margin=[4, 3, 2, 3],
@@ -274,18 +268,6 @@ layouts = [
         border_on_single=True,
     ),
     layout.Floating(**layout_theme),
-    # layout.TreeTab(border_width = 2, bg_color = colors[1], active_bg = colors[9], inactive_bg = colors[3], panel_width = 200),
-    # layout.MonadThreeCol(**layout_theme),
-    # layout.Bsp(**layout_theme),
-    # layout.Stack(num_stacks=2),
-    # layout.Matrix(),
-    # layout.MonadWide(),
-    # layout.RatioTile(),
-    # layout.Tile(),
-    # layout.VerticalTile(),
-    # layout.Zoomy(),
-    # layout.Slice(),
-    # layout.Spiral(),
 ]
 
 powerline = {"decorations": [PowerLineDecoration(path="forward_slash")]}
@@ -415,14 +397,6 @@ screens = [
                     },
                     **rect_extra,
                 ),
-                # widget.Cmus(
-                #    font="IBM Plex Sans SmBld",
-                #    fontsize=16,
-                #    paused_color=colors[19],
-                #    playing_color=colors[14],
-                #    stopped_color=colors[19],
-                #    format="{status_text}({position}/{remaining}) {artist} - {title}",
-                # ),
                 widget.Spacer(
                     length=3,
                 ),
@@ -464,16 +438,19 @@ screens = [
                     length=2,
                     **rect_spacer,
                 ),
-                owm.OpenWeatherMap(
-                    api_key="f009ccceabb36441891829f2962ba4ba",
+                widget.Wttr(
                     foreground=colors[14],
-                    latitude=59.9,
-                    longitude=30.3,
-                    icon_font="Weather Icons",
                     font="IBM Plex Sans SmBld",
                     fontsize=16,
-                    format=" {icon}  {temp:.1f}{temp_units}",
-                    update_interval=1800,
+                    format=" %c%t %w",
+                    units="M",
+                    lang="ru",
+                    location={},
+                    mouse_callbacks={
+                        "Button1": lambda: qtile.spawn(
+                            terminal + ' --hold -e curl "ru.wttr.in/?M"'
+                        ),
+                    },
                 ),
                 widget.Spacer(
                     length=bar.STRETCH,
