@@ -1,4 +1,6 @@
 import subprocess
+
+import openmeteo
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -9,6 +11,7 @@ from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration,
 )
+from colors import *
 
 mod = "mod4"
 terminal = "kitty"
@@ -219,35 +222,6 @@ for i in groups:
     )
 
 
-colors = [
-    ["#f2d5cf"],  # 0 rosewater
-    ["#eebebe"],  # 1 flamingo
-    ["#f4b8e4"],  # 2 pink
-    ["#ca9ee6"],  # 3 mauve
-    ["#e78284"],  # 4 red
-    ["#ea999c"],  # 5 maroon
-    ["#ef9f76"],  # 6 peach
-    ["#e5c890"],  # 7 yellow
-    ["#a6d189"],  # 8 green
-    ["#81c8be"],  # 9 teal
-    ["#99d1db"],  # 10 sky
-    ["#85c1dc"],  # 11 sapphire
-    ["#8caaee"],  # 12 blue
-    ["#babbf1"],  # 13 lavender
-    ["#c6d0f5"],  # 14 text
-    ["#b5bfe2"],  # 15 subtext1
-    ["#a5adce"],  # 16 subtext0
-    ["#949cbb"],  # 17 overlay2
-    ["#838ba7"],  # 18 overlay1
-    ["#737994"],  # 19 overlay0
-    ["#626880"],  # 20 surface2
-    ["#51576d"],  # 21 surface1
-    ["#414559"],  # 22 surface0
-    ["#303446"],  # 23 base
-    ["#292c3c"],  # 24 mantle
-    ["#232634"],  # 25 crust
-]
-
 layout_theme = {
     "border_width": 2,
     "margin": 5,
@@ -438,19 +412,21 @@ screens = [
                     length=2,
                     **rect_spacer,
                 ),
-                widget.Wttr(
+                openmeteo.OpenMeteo(
+                    fontsize=16,
                     foreground=colors[14],
                     font="IBM Plex Sans SmBld",
-                    fontsize=16,
-                    format=" %c%t %w",
-                    units="M",
-                    lang="ru",
-                    location={},
-                    mouse_callbacks={
-                        "Button1": lambda: qtile.spawn(
-                            terminal + ' --hold -e curl "ru.wttr.in/?M"'
-                        ),
-                    },
+                    tooltip_fontsize=14,
+                    tooltip_color=colors[14],
+                    tooltip_background=colors[20],
+                    update_interval=600,
+                    language="ru",
+                    popup_show_args={"relative_to": 2, "relative_to_bar": True},
+                    # mouse_callbacks={
+                    #     "Button1": lambda: qtile.spawn(
+                    #         terminal + ' --hold -e curl "ru.wttr.in/?M"'
+                    #     ),
+                    # },
                 ),
                 widget.Spacer(
                     length=bar.STRETCH,
