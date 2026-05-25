@@ -1,6 +1,7 @@
 import subprocess
 
 import openmeteo
+from colors import *
 from libqtile import bar, hook, layout, qtile
 from libqtile import widget as old_widget
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -11,7 +12,6 @@ from qtile_extras.widget.decorations import (
     PowerLineDecoration,
     RectDecoration,
 )
-from colors import *
 
 mod = "mod4"
 terminal = "kitty"
@@ -506,6 +506,7 @@ screens = [
                     foreground=colors[22],
                     margin=2,
                     percentage_low=0.3,
+                    battery_name="BAT0",
                     **rect_group,
                 ),
                 widget.Battery(
