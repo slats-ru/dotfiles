@@ -1,18 +1,23 @@
+import json
 from datetime import datetime
 from typing import Any
-from libqtile.widget import GenPollUrl
-from qtile_extras.widget.mixins import TooltipMixin, ExtendedPopupMixin
-from qtile_extras.popup import PopupRelativeLayout, PopupText
 from urllib.request import urlopen
-import json
-from colors import *
+
+from libqtile.widget import GenPollUrl
+from modules.colors import colors
+from qtile_extras.popup import PopupRelativeLayout, PopupText
+from qtile_extras.widget.mixins import ExtendedPopupMixin, TooltipMixin
 
 
 # get location info
 def get_ip_data() -> dict:
     url = "http://ipinfo.io/json"
-    resp = urlopen(url)
-    return json.load(resp)
+    try:
+        resp = urlopen(url)
+        return json.load(resp)
+    except:
+        with open("/home/slats/.config/qtile/resourses/geoip.json") as file:
+            return json.load(file)
 
 
 def get_coordinates() -> tuple:
@@ -397,7 +402,6 @@ class OpenMeteo(GenPollUrl, TooltipMixin, ExtendedPopupMixin):
 
     # convert a WMO weathercode to a textual description
     def wmocode2text(self, wmocode):
-
         wmo_text_en = {
             "Default": "missing",
             "0": "clear sky️",
