@@ -1,3 +1,4 @@
+import os
 import re
 import socket
 import subprocess
@@ -23,6 +24,8 @@ wmname = "QTile"
 thunar_path = (
     "/home/slats/Downloads" if host == "thinkpad-x1-carbon" else "/mnt/data/Downloads/"
 )
+# os.environ["QT_STYLE_OVERRIDE"] = "Fusion"
+os.environ["QT_X11_NO_MITSHM"] = "1"
 
 
 ##########################
