@@ -15,30 +15,60 @@ return {
     },
 
     {
-        -- Set lualine as statusline
-        'nvim-lualine/lualine.nvim',
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
-        opts = {
-            options = {
-                theme = 'catppuccin',
-                icons_enabled = true,
-                component_separators = '|',
-                section_separators = '|',
-            },
-            sections = {
-                lualine_c = { 'filename', 'encoding' },
-                lualine_x = {
-                    {
-                        require("lazy.status").updates,
-                        cond = require("lazy.status").has_updates,
-                        color = { fg = "#ff9e64" },
-                    },
+    -- Set lualine as statusline
+    'nvim-lualine/lualine.nvim',
+    -- Здесь ОСТАВЛЯЕМ только иконки, никаких catppuccin внутри dependencies!
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+        options = {
+            -- Используем 'catppuccin-frappe' (так как в теме у вас указан флейвор frappe)
+            theme = 'catppuccin-frappe',
+            icons_enabled = true,
+            component_separators = '|',
+            section_separators = '|',
+        },
+        sections = {
+            lualine_c = { 'filename', 'encoding' },
+            lualine_x = {
+                {
+                    require("lazy.status").updates,
+                    cond = require("lazy.status").has_updates,
+                    color = { fg = "#ff9e64" },
                 },
-                lualine_y = { 'progress', 'location' },
-                lualine_z = { 'tabs', 'windows' }
             },
-        }
+            lualine_y = { 'progress', 'location' },
+            lualine_z = { 'tabs', 'windows' }
+        },
     },
+
+    {
+        {
+            'nvim-lualine/lualine.nvim',
+            dependencies = { 'nvim-tree/nvim-web-devicons' },
+            opts = {
+                options = {
+                    -- Возвращаем "auto", чтобы lualine просто взял цвета активной темы catppuccin
+                    theme = 'auto',
+                    icons_enabled = true,
+                    component_separators = '|',
+                    section_separators = '|',
+                },
+                sections = {
+                    lualine_c = { 'filename', 'encoding' },
+                    lualine_x = {
+                        {
+                            require("lazy.status").updates,
+                            cond = require("lazy.status").has_updates,
+                            color = { fg = "#ff9e64" },
+                        },
+                    },
+                    lualine_y = { 'progress', 'location' },
+                    lualine_z = { 'tabs', 'windows' }
+                },
+            }
+        },
+    },
+},
 
     {
         -- Add indentation guides even on blank lines
@@ -60,13 +90,13 @@ return {
     },
 
     {
-    "akinsho/bufferline.nvim",
-    optional = true,
-    opts = function(_, opts)
-        if (vim.g.colors_name or ""):find("catppuccin") then
-        opts.highlights = require("catppuccin.special.bufferline").get_theme()
-        end
-    end,
+        "akinsho/bufferline.nvim",
+        optional = true,
+        opts = function(_, opts)
+            if (vim.g.colors_name or ""):find("catppuccin") then
+                opts.highlights = require("catppuccin.special.bufferline").get_theme()
+            end
+        end,
     },
 
     {
@@ -123,7 +153,7 @@ return {
                 },
                 {
                     type = "text",
-                    val = "Пока мы улыбаемся - мы живы, а пока мы живы, мы сильнее времени.",
+                    val = "Пока мы улыбаемся - мы живы, а пока мы живы - мы сильнее времени.",
                     opts = { hl = "NeovimDashboardUsername", shrink_margin = false, position = "center" },
                 },
             }
