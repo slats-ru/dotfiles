@@ -5,13 +5,12 @@ import subprocess
 from libqtile import bar, hook, layout, qtile
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
-from qtile_extras import widget
-from qtile_extras.widget import modify
-from qtile_extras.widget.decorations import RectDecoration
-
 from modules import openmeteo
 from modules.colors import colors
 from modules.kbswitch import MyKeyboardLayout
+from qtile_extras import widget
+from qtile_extras.widget import modify
+from qtile_extras.widget.decorations import RectDecoration
 
 ##########################
 ####### Variables ########
