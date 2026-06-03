@@ -20,6 +20,9 @@ mod = "mod4"
 terminal = "kitty"
 host = socket.gethostname()
 wmname = "QTile"
+thunar_path = (
+    "/home/slats/Downloads" if host == "thinkpad-x1-carbon" else "/mnt/data/Downloads/"
+)
 
 
 ##########################
@@ -63,12 +66,20 @@ keys = [
     Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
     # Grow windows. If current window is on the edge of screen and direction
     # will be to screen edge - window would shrink.
+    Key([mod, "control"], "i", lazy.layout.grow(), desc="Expand window (monadtall)"),
+    Key([mod, "control"], "d", lazy.layout.shrink(), desc="Shrink window (monadtall)"),
     Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
     Key(
         [mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"
     ),
     Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
     Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
+    Key(
+        [mod, "control"],
+        "w",
+        lazy.layout.reset(),
+        desc="Reset all window sizes (monadtall)",
+    ),
     Key([mod, "control"], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
     # Toggle between split and unsplit sides of stack.
     # Split = all windows displayed
@@ -102,7 +113,7 @@ keys = [
     # Applications launcher
     Key([mod], "r", lazy.spawn("rofi -show drun"), desc="Launch Rofi launcher"),
     Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    Key([mod], "t", lazy.spawn("thunar /home/slats/Downloads"), desc="Thunar"),
+    Key([mod], "t", lazy.spawn(f"thunar {thunar_path}"), desc="Thunar"),
     Key([mod], "o", lazy.spawn("obsidian"), desc="Obsidian"),
     # Key([mod], "v", lazy.spawn("code"), desc="VS Code"),
     Key(
@@ -154,7 +165,7 @@ groups = [
     Group(
         "2",
         label="",
-        layout="columns",
+        layout="monadtall",
         matches=[Match(wm_class=re.compile(r"^(brave\-browser|Brave\-browser)$"))],
     ),
     Group(
@@ -182,7 +193,7 @@ groups = [
     Group(
         "6",
         label="󰜫",
-        layout="columns",
+        layout="monadtall",
         matches=[Match(wm_class=re.compile(r"^(obsidian)$"))],
     ),
     Group(
@@ -191,6 +202,7 @@ groups = [
         layout="columns",
         matches=[Match(wm_class=re.compile(r"^(transmission\-gtk)$"))],
     ),
+    Group("8", label="", layout="columns"),
 ]
 
 for i in groups:
@@ -222,24 +234,27 @@ for i in groups:
 ######## Layouts ########
 #########################
 
+layout_theme = {
+    "border_width": 2,
+    "margin": 5,
+    "border_focus": colors[17],
+    "border_normal": colors[21],
+}
+
 layouts = [
-    layout.Max(),
+    # layout.Max(),
     layout.Columns(
         border_width=2,
         margin=[4, 3, 2, 3],
         margin_on_single=5,
-        border_focus=colors[17],
+        border_focus=colors[13],
         border_normal=colors[21],
         border_focus_stack=colors[3],
         border_normal_stack=colors[14],
         border_on_single=True,
     ),
-    layout.Floating(
-        border_width=2,
-        margin=5,
-        border_focus=colors[17],
-        border_normal=colors[21],
-    ),
+    layout.Floating(**layout_theme),
+    layout.MonadTall(ratio=0.7, **layout_theme),
 ]
 
 
@@ -525,7 +540,12 @@ keyboard_layout = MyKeyboardLayout(
 )
 systray_1 = widget.Systray()
 systray_2 = widget.StatusNotifier()
-
+cat = widget.Image(
+    background=colors[13],
+    margin_x=4,
+    filename="/home/slats/.config/qtile/resources/icons/svg/dark/cat.svg",
+    **rect,
+)
 
 #########################
 ######## Spacers ########
@@ -587,7 +607,7 @@ normal_widgets_2 = [
 
 widgets_list = (
     normal_widgets_1
-    + (battery_widgets if host == "thinkpad-x1-carbon" else [])
+    + (battery_widgets if host == "thinkpad-x1-carbon" else [cat])
     + normal_widgets_2
 )
 
@@ -680,10 +700,13 @@ def start_once():
 
 
 @hook.subscribe.client_new
-def disable_floating(window):
-    rules = [Match(wm_class="mpv")]
-
-    if any(window.match(rule) for rule in rules):
-        # window.togroup("8")
-        window.togroup(qtile.current_group.name)
-        window.cmd_disable_floating()
+def new_client(window):
+    if window.match(Match(wm_class="mpv")):
+        window.togroup("8", switch_group=True)
+        window.toggle_fullscreen()
+        # window.togroup(qtile.current_group.name)
+        # window.cmd_disable_floating()
+    if window.match(
+        Match(wm_class=re.compile(r"^(xreader|com\.github\.johnfactotum\.Foliate)$"))
+    ):
+        window.togroup("5", switch_group=True)
