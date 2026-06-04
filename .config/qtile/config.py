@@ -1,4 +1,3 @@
-import os
 import re
 import socket
 import subprocess
@@ -203,8 +202,10 @@ groups = [
         layout="columns",
         matches=[Match(wm_class=re.compile(r"^(transmission\-gtk)$"))],
     ),
-    Group("8", label="", layout="columns"),
 ]
+
+if host != "thinkpad-x1-carbon":
+    groups.append(Group("8", label="", layout="columns"))
 
 for i in groups:
     keys.extend(
@@ -361,6 +362,8 @@ groupbox = widget.GroupBox(
     urgent_border=colors[4],
     **rect_groupbox,
 )
+
+
 textbox = widget.TextBox(
     text="  ",
     foreground=colors[22],
@@ -711,3 +714,24 @@ def new_client(window):
         Match(wm_class=re.compile(r"^(xreader|com\.github\.johnfactotum\.Foliate)$"))
     ):
         window.togroup("5", switch_group=True)
+    # if window.match(Match(wm_class=re.compile(r"^(transmission\-gtk)$"))):
+    # window.togroup("7", switch_group=True)
+
+
+@hook.subscribe.client_urgent_hint_changed
+def go_to_transmission_urgent(window):
+    # Проверяем, что окно просит внимания и у него есть группа
+    if window and getattr(window, "urgent", False) and window.group:
+        try:
+            wm_class = window.get_wm_class()
+            # Проверяем, что это Transmission (GTK или Qt версия)
+            if wm_class and any("transmission" in c.lower() for c in wm_class):
+                group_name = window.group.name
+
+                # Используем самый жесткий способ переключения через глобальный объект qtile
+                if group_name in qtile.groups_map:
+                    target_group = qtile.groups_map[group_name]
+                    # Переключаем текущий активный экран на эту группу
+                    target_group.toscreen(toggle=False)
+        except Exception:
+            pass
