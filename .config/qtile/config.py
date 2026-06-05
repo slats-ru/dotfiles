@@ -368,7 +368,7 @@ textbox = widget.TextBox(
     text="  ",
     foreground=colors[22],
     background=colors[16],
-    font="IBM Plex Sans SmBld",
+    font="IBM Plex Sans SmBld, Hack Nerd Font Bold",
     fontsize=16,
     mouse_callbacks={
         "Button1": lazy.spawn(
@@ -413,7 +413,7 @@ clock_time = widget.Clock(
 weather = openmeteo.OpenMeteo(
     fontsize=16,
     foreground=colors[14],
-    font="IBM Plex Sans SmBld",
+    font="IBM Plex Sans SmBld, Hack Nerd Font Bold",
     tooltip_fontsize=14,
     tooltip_color=colors[14],
     tooltip_background=colors[20],
