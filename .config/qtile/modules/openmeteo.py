@@ -1,9 +1,11 @@
 import json
+import subprocess
+import time
 from datetime import datetime
 from typing import Any
 from urllib.request import urlopen
 
-from libqtile.widget import GenPollUrl
+from libqtile.widget import GenPollText
 from modules.colors import colors
 from qtile_extras.popup import PopupRelativeLayout, PopupText
 from qtile_extras.widget.mixins import ExtendedPopupMixin, TooltipMixin
@@ -37,7 +39,7 @@ locations = {"Saint Petersburg": "Санкт-Петербург"}
 # including simple weather forecast data a widget tooltip
 
 
-class OpenMeteo(GenPollUrl, TooltipMixin, ExtendedPopupMixin):
+class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
     """A widget for the Qtile windowmanager to display weather data and a simple forecast from openmeteo.com.
     Place the file openmeteo.py in your .config/qtile directory and add the following to you config.py:
 
@@ -222,13 +224,15 @@ class OpenMeteo(GenPollUrl, TooltipMixin, ExtendedPopupMixin):
 
     # constructor
     def __init__(self, **config):
-        GenPollUrl.__init__(self, **config)
+        config["func"] = self.poll
+        GenPollText.__init__(self, **config)
         self.add_defaults(OpenMeteo.defaults)
-        self.latitude = get_coordinates()[0]
-        self.longitude = get_coordinates()[1]
-        determined_location = get_coordinates()[2]
+        coordinates = get_coordinates()
+        self.latitude = coordinates[0]
+        self.longitude = coordinates[1]
+        determined_location = coordinates[2]
         self.location = locations.get(determined_location, determined_location)
-        self.timezone = get_coordinates()[3]
+        self.timezone = coordinates[3]
         self.current_icon = self.wmo_symbols_day["Default"]
         self.current_weather = "No Info"
         self.forecast = "No Info"
@@ -297,8 +301,38 @@ class OpenMeteo(GenPollUrl, TooltipMixin, ExtendedPopupMixin):
         url = self.query_url + daily_params + current_params + misc_params
         self.url = url
 
-    def parse(self, response):
-        data = response
+    def poll(self):
+        max_retries = 3
+        retry_delay = 2
+        error_icon = ""
+        cmd = [
+            "curl",
+            "-s",
+            "--socks5-hostname",
+            "localhost:12334",
+            self.url,
+        ]
+        for attempt in range(max_retries):
+            try:
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+                if result.returncode == 0:
+                    response_json = json.loads(result.stdout)
+                    return self.parse(response_json)
+
+            except (json.JSONDecodeError, subprocess.TimeoutExpired):
+                pass
+            except Exception:
+                pass
+
+            if attempt < max_retries - 1:
+                time.sleep(retry_delay)
+
+        self.current_weather = "Прокси или сеть недоступны"
+        self.forecast = "Не удалось обновить прогноз погоды"
+
+        return f" {error_icon} Network Error"
+
+    def parse(self, data):
         sunrise_time = datetime.fromisoformat(data["daily"]["sunrise"][0])
         sunset_time = datetime.fromisoformat(data["daily"]["sunset"][0])
         data["sunrise"] = sunrise_time.strftime(self.timeformat)
