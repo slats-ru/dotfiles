@@ -224,7 +224,6 @@ class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
 
     # constructor
     def __init__(self, **config):
-        config["func"] = self.poll
         GenPollText.__init__(self, **config)
         self.add_defaults(OpenMeteo.defaults)
         coordinates = get_coordinates()
@@ -302,8 +301,6 @@ class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
         self.url = url
 
     def poll(self):
-        max_retries = 3
-        retry_delay = 2
         error_icon = ""
         cmd = [
             "curl",
@@ -312,24 +309,16 @@ class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
             "localhost:12334",
             self.url,
         ]
-        for attempt in range(max_retries):
-            try:
-                result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
-                if result.returncode == 0:
-                    response_json = json.loads(result.stdout)
-                    return self.parse(response_json)
-
-            except (json.JSONDecodeError, subprocess.TimeoutExpired):
-                pass
-            except Exception:
-                pass
-
-            if attempt < max_retries - 1:
-                time.sleep(retry_delay)
+        try:
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+            if result.returncode == 0:
+                response_json = json.loads(result.stdout)
+                return self.parse(response_json)
+        except Exception:
+            pass
 
         self.current_weather = "Прокси или сеть недоступны"
         self.forecast = "Не удалось обновить прогноз погоды"
-
         return f" {error_icon} Network Error"
 
     def parse(self, data):
