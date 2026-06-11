@@ -300,7 +300,41 @@ class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
         url = self.query_url + daily_params + current_params + misc_params
         self.url = url
 
+    # def poll(self):
+    #     cmd = [
+    #         "curl",
+    #         "-s",
+    #         "--socks5-hostname",
+    #         "localhost:12334",
+    #         self.url,
+    #     ]
+    #     try:
+    #         result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+    #         if result.returncode == 0:
+    #             response_json = json.loads(result.stdout)
+    #             return self.parse(response_json)
+    #     except Exception:
+    #         pass
+
+    #     self.current_weather = "Прокси или сеть недоступны"
+    #     self.forecast = "Не удалось обновить прогноз погоды"
+    #     return " Network Error"
+
     def poll(self):
+        # 1. Защита от неоткрывшегося прокси при старте системы:
+        # Проверяем аптайм ПК. Если система загрузилась меньше 40 секунд назад,
+        # выдаем заглушку, чтобы curl даже не пытался стучаться в пустой порт.
+        try:
+            with open("/proc/uptime", "r") as f:
+                uptime_seconds = float(f.readline().split()[0])
+            if uptime_seconds < 40.0:
+                self.current_weather = "Ожидание запуска прокси-сервера..."
+                self.forecast = "Пожалуйста, подождите, система только что загрузилась."
+                return "   Запуск..."
+        except Exception:
+            pass
+
+        # 2. Безопасный одиночный запрос БЕЗ циклов и БЕЗ time.sleep
         error_icon = ""
         cmd = [
             "curl",
@@ -309,14 +343,20 @@ class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
             "localhost:12334",
             self.url,
         ]
+
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
+            # Делаем ОДНУ строгую попытку с таймаутом в 4 секунды.
+            # Если прокси лежит, subprocess завершится за 4 секунды, НЕ блокируя Qtile намертво.
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=4)
             if result.returncode == 0:
                 response_json = json.loads(result.stdout)
-                return self.parse(response_json)
+                return self.parse(response_json)  # Всё успешно, возвращаем погоду
         except Exception:
+            # Если упало по таймауту или ошибке сети — просто игнорируем и идем дальше
             pass
 
+        # Если запрос не удался, мгновенно выходим.
+        # Виджет НЕ зависнет, и Qtile послушно вызовет poll() снова через ваш update_interval.
         self.current_weather = "Прокси или сеть недоступны"
         self.forecast = "Не удалось обновить прогноз погоды"
         return f" {error_icon} Network Error"
