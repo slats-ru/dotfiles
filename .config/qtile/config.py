@@ -546,7 +546,8 @@ systray_1 = widget.Systray()
 systray_2 = widget.StatusNotifier()
 cat = widget.Image(
     background=colors[13],
-    margin_x=4,
+    margin_x=6,
+    margin_y=2,
     filename="/home/slats/.config/qtile/resources/icons/svg/dark/cat.svg",
     **rect,
 )
