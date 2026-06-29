@@ -300,26 +300,6 @@ class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
         url = self.query_url + daily_params + current_params + misc_params
         self.url = url
 
-    # def poll(self):
-    #     cmd = [
-    #         "curl",
-    #         "-s",
-    #         "--socks5-hostname",
-    #         "localhost:12334",
-    #         self.url,
-    #     ]
-    #     try:
-    #         result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
-    #         if result.returncode == 0:
-    #             response_json = json.loads(result.stdout)
-    #             return self.parse(response_json)
-    #     except Exception:
-    #         pass
-
-    #     self.current_weather = "Прокси или сеть недоступны"
-    #     self.forecast = "Не удалось обновить прогноз погоды"
-    #     return " Network Error"
-
     def poll(self):
         max_retries = 3
         retry_delay = 2
@@ -348,7 +328,7 @@ class OpenMeteo(GenPollText, TooltipMixin, ExtendedPopupMixin):
         self.current_weather = "Прокси или сеть недоступны"
         self.forecast = "Не удалось обновить прогноз погоды"
 
-        return f"  Loading..."
+        return f"    Loading..."
 
     def parse(self, data):
         sunrise_time = datetime.fromisoformat(data["daily"]["sunrise"][0])
