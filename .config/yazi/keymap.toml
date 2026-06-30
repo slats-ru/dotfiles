@@ -2,11 +2,11 @@
 
 prepend_keymap = [
 	# Bookmarks
-	{ on = [ "u", "a" ], run = "plugin yamb -- save", desc = "Add bookmark" },
-	{ on = [ "u", "g" ], run = "plugin yamb -- jump_by_key", desc = "Jump bookmark by key" },
-	{ on = [ "u", "d" ], run = "plugin yamb -- delete_by_key", desc = "Delete bookmark by key" }, 
-	{ on = [ "u", "A" ], run = "plugin yamb -- delete_all", desc = "Delete all bookmarks" },
-	{ on = [ "u", "r" ], run = "plugin yamb -- rename_by_key", desc = "Rename bookmark by key" },
+	{ on = [ "b", "a" ], run = "plugin yamb -- save", desc = "Add bookmark" },
+	{ on = [ "b", "g" ], run = "plugin yamb -- jump_by_key", desc = "Jump bookmark by key" },
+	{ on = [ "b", "d" ], run = "plugin yamb -- delete_by_key", desc = "Delete bookmark by key" }, 
+	{ on = [ "b", "A" ], run = "plugin yamb -- delete_all", desc = "Delete all bookmarks" },
+	{ on = [ "b", "r" ], run = "plugin yamb -- rename_by_key", desc = "Rename bookmark by key" },
 
 	# chmod
 	{ on = [ "c", "m" ], run = "plugin chmod", desc = "Chmod on selected files" },
@@ -19,11 +19,22 @@ prepend_keymap = [
 
 	# smart-enter
 	{ on = [ "<Enter>" ], run = "plugin smart-enter", desc = "Enter directory or open file" },
+	{ on   = [ "<S-enter>" ], run  = "open --interactive", desc = "Открыть меню выбора программ через Shift+Enter" },
 
 	# open-terminal
-	{ on   = [ "T" ], run  = "shell 'kitty --detach --directory=\"$PWD\"' --orphan", desc = "Open Kitty terminal here" },
+	{ on   = [ "K" ], run  = "shell 'kitty --detach --directory=\"$PWD\"' --orphan", desc = "Open Kitty terminal here" },
 	{ on   = [ "N" ], run  = "shell 'kitty --detach nvim \"$1\"' --orphan", desc = "Open Neovim in new window" },
 
+	# search
+	{ on   = [ "/" ], run  = "search --smart", desc = "Умный поиск по регулярному выражению (smartcase)" },
+
+	# trash
+	{ on   = [ "D" ], run  = "remove --permanently", desc = "Permanently delete selected files without confirmation" },
+	{ on   = [ "T" ], run  = "plugin omni-trash", desc = "Открыть корзину" },
+
+	# unmount-disks
+	{ on   = [ "u", "m" ], run  = "plugin mount", desc = "Флешки: Открыть меню (Выбрать диск -> m/u/e)" },
+	{ on   = [ "u", "h" ], run  = "shell 'echo -e \"Управление в меню:\\n  m - Монтировать\\n  u - Размонтировать\\n  e - Извлечь питание\\n  q - Выход\"; read -n 1 -p \"Нажмите любую клавишу...\"' --block --confirm", desc = "Флешки: Показать шпаргалку клавиш" },
 ]
 
 keymap = [

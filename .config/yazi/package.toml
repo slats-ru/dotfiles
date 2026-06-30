@@ -23,6 +23,16 @@ use = "yazi-rs/plugins:full-border"
 rev = "39aaf6d"
 hash = "7b625412411be411153886894d9acaf"
 
+[[plugin.deps]]
+use = "goon/omni-trash"
+rev = "3c2a992"
+hash = "6e5bf967707c8c9b6495cf5863ff497f"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "39aaf6d"
+hash = "e3260d0b1feded8c8e3ae3afa1169e30"
+
 [[flavor.deps]]
 use = "yazi-rs/flavors:catppuccin-frappe"
 rev = "4770a34"
