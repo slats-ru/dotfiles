@@ -117,6 +117,7 @@ alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
+#alias yazi='yazi "/home/slats/Downloads"'
 
 # search plugin
 bindkey "$terminfo[kcuu1]" history-substring-search-up
@@ -124,3 +125,13 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 
 # manpager
 # export MANPAGER="nvim -c 'set ft=man' -"
+#
+
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}

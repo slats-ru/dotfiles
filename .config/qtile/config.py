@@ -202,10 +202,15 @@ groups = [
         layout="columns",
         matches=[Match(wm_class=re.compile(r"^(transmission\-gtk)$"))],
     ),
+    Group(
+        "8",
+        label="",
+        layout="columns",
+    ),
 ]
 
-if host != "thinkpad-x1-carbon":
-    groups.append(Group("8", label="", layout="columns"))
+# if host != "thinkpad-x1-carbon":
+# groups.append(Group("8", label="", layout="columns"))
 
 for i in groups:
     keys.extend(
