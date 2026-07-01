@@ -18,7 +18,7 @@ def get_ip_data() -> dict:
         resp = urlopen(url)
         return json.load(resp)
     except:
-        with open("/home/slats/.config/qtile/resourses/geoip.json") as file:
+        with open("/home/slats/.config/qtile/resources/geoip.json") as file:
             return json.load(file)
 
 
