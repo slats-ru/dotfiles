@@ -7,3 +7,4 @@ udiskie --notify --smart-tray &
 dunst &
 picom &
 mpv --volume=40 --no-video /home/slats/.config/qtile/resources/boot.wav &
+/home/slats/.config/qtile/scripts/redshift &

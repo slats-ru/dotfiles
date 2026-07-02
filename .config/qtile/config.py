@@ -706,7 +706,7 @@ wl_input_rules = None
 
 @hook.subscribe.startup_once
 def start_once():
-    subprocess.call(["/home/slats/.config/qtile/scripts/autostart.sh"])
+    subprocess.call(["/home/slats/.config/qtile/scripts/autostart"])
 
 
 @hook.subscribe.client_new
